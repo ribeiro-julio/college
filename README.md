@@ -1,3 +1,3 @@
 # college
 
-Here you can find my college projects and codes
+Some of my college projects and codes
