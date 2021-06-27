@@ -24,6 +24,15 @@ int size(StaticStack *stack){
     return stack->top;
 }
 
+int top(StaticStack *stack){
+    if(isEmpty(stack)){
+        printf("Nenhum elemento no topo -> pilha vazia\n");
+        return -99;
+    }
+    
+    return stack->array[stack->top - 1];
+}
+
 void push(StaticStack *stack, int x){
     if(!isFull(stack)){
         stack->array[stack->top] = x;
@@ -39,14 +48,10 @@ int pop(StaticStack *stack){
         ret = stack->array[stack->top - 1];
         stack->top--;
     }else
-        printf("Nao e possivel excluir -> pilha esta vazia\n");
+        printf("Nao e possivel excluir -> pilha vazia\n");
 
     return ret;
 }
-
-/*
-    topo
-*/
 
 void printStack(StaticStack *stack){
     printf("Stack = { ");
@@ -70,6 +75,10 @@ int main(int argc, char *argv[]){
     else
         printf("Pilha nao esta cheia\n");
 
+    int ontop = top(&stack);
+    if(ontop != -99)
+        printf("Topo: %d\n", ontop);
+
     pop(&stack);
 
     push(&stack, 9);
@@ -85,7 +94,15 @@ int main(int argc, char *argv[]){
     push(&stack, 32);
     printStack(&stack);
 
+    ontop = top(&stack);
+    if(ontop != -99)
+        printf("Topo: %d\n", ontop);
+
     pop(&stack);
+
+    ontop = top(&stack);
+    if(ontop != -99)
+        printf("Topo: %d\n", ontop);
 
     printStack(&stack);
 
