@@ -19,14 +19,23 @@ void init(DynamicStack *stack){
     stack->size = 0;
 }
 
-int size(DynamicStack *stack){
-    return stack->size;
-}
-
 bool isEmpty(DynamicStack *stack){
     // size == 0
     // top == null
     return stack->size == 0;
+}
+
+int size(DynamicStack *stack){
+    return stack->size;
+}
+
+int top(DynamicStack *stack){
+    if(isEmpty(stack)){
+        printf("Nenhum elemento no topo -> pilha vazia\n");
+        return -99;
+    }
+
+    return stack->top->x;
 }
 
 void push(DynamicStack *stack, int x){
@@ -53,10 +62,16 @@ int pop(DynamicStack *stack){
     return ret;
 }
 
-/*
-    destruir
-    topo
-*/
+void destroy(DynamicStack *stack){
+    printf("Destruindo a pilha\n");
+    StackNodePtr node;
+    while(stack->top != NULL){
+        node = stack->top;
+        stack->top = stack->top->next;
+        free(node);
+    }
+    stack->size = 0;
+}
 
 void printStack(DynamicStack *stack){
     printf("Stack = { ");
@@ -77,9 +92,16 @@ int main(int argc, char *argv[]){
     else
         printf("Pilha nao esta vazia\n");
 
+    int ontop = top(&stack);
+    if(ontop != -99)
+        printf("Topo: %d\n", ontop);
+
     for(int i = 0; i < 10; i++){
         push(&stack, i+1);
         printStack(&stack);
+        ontop = top(&stack);
+        if(ontop != -99)
+            printf("Topo: %d\n", ontop);
     }
 
     if(isEmpty(&stack))
@@ -89,12 +111,17 @@ int main(int argc, char *argv[]){
 
     printf("Size = %d\n", size(&stack));
 
+    destroy(&stack);
+    printStack(&stack);
+    printf("Size = %d\n", size(&stack));
+
     for(int i = 0; i < 11; i++){
         printStack(&stack);
         pop(&stack);
+        ontop = top(&stack);
+        if(ontop != -99)
+            printf("Topo: %d\n", ontop);
     }
-
-    printf("Size = %d\n", size(&stack));
 
     return 0;
 }
