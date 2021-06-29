@@ -3,29 +3,29 @@
 
 #define SIZE 5
 
-typedef struct{
+typedef struct {
     int array[SIZE];    // Pilha com tamanho SIZE
     int top;    // Indexação
-}StaticStack;
+} StaticStack;
 
-void init(StaticStack *stack){
+void init(StaticStack *stack) {
     stack->top = 0;
 }
 
-bool isEmpty(StaticStack *stack){
+bool isEmpty(StaticStack *stack) {
     return stack->top == 0;
 }
 
-bool isFull(StaticStack *stack){
+bool isFull(StaticStack *stack) {
     return stack->top == SIZE;
 }
 
-int size(StaticStack *stack){
+int size(StaticStack *stack) {
     return stack->top;
 }
 
-int top(StaticStack *stack){
-    if(isEmpty(stack)){
+int top(StaticStack *stack) {
+    if(isEmpty(stack)) {
         printf("Nenhum elemento no topo -> pilha vazia\n");
         return -99;
     }
@@ -33,34 +33,34 @@ int top(StaticStack *stack){
     return stack->array[stack->top - 1];
 }
 
-void push(StaticStack *stack, int x){
-    if(!isFull(stack)){
+void push(StaticStack *stack, int x) {
+    if(!isFull(stack)) {
         stack->array[stack->top] = x;
         stack->top++;
-    }else
+    } else
         printf("Nao e possivel inserir -> pilha cheia\n");
 }
 
-int pop(StaticStack *stack){
+int pop(StaticStack *stack) {
     int ret = -99;
 
-    if(!isEmpty(stack)){
+    if(!isEmpty(stack)) {
         ret = stack->array[stack->top - 1];
         stack->top--;
-    }else
+    } else
         printf("Nao e possivel excluir -> pilha vazia\n");
 
     return ret;
 }
 
-void printStack(StaticStack *stack){
+void printStack(StaticStack *stack) {
     printf("Stack = { ");
     for(int i = 0; i < stack->top; i++)
         printf("%d ", stack->array[i]);
     printf("}\n");
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[]) {
     StaticStack stack;
     
     init(&stack);

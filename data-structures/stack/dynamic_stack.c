@@ -4,33 +4,33 @@
 
 typedef struct StackNode *StackNodePtr;
 
-typedef struct StackNode{
+typedef struct StackNode {
     int x;
     StackNodePtr next;
-}StackNode;
+} StackNode;
 
-typedef struct{
+typedef struct {
     StackNodePtr top;
     int size;
-}DynamicStack;
+} DynamicStack;
 
-void init(DynamicStack *stack){
+void init(DynamicStack *stack) {
     stack->top = NULL;
     stack->size = 0;
 }
 
-bool isEmpty(DynamicStack *stack){
+bool isEmpty(DynamicStack *stack) {
     // size == 0
     // top == null
     return stack->size == 0;
 }
 
-int size(DynamicStack *stack){
+int size(DynamicStack *stack) {
     return stack->size;
 }
 
-int top(DynamicStack *stack){
-    if(isEmpty(stack)){
+int top(DynamicStack *stack) {
+    if(isEmpty(stack)) {
         printf("Nenhum elemento no topo -> pilha vazia\n");
         return -99;
     }
@@ -38,7 +38,7 @@ int top(DynamicStack *stack){
     return stack->top->x;
 }
 
-void push(DynamicStack *stack, int x){
+void push(DynamicStack *stack, int x) {
     StackNodePtr aux;
     aux = (StackNodePtr)malloc(sizeof(StackNode));
     aux->x = x;
@@ -47,25 +47,25 @@ void push(DynamicStack *stack, int x){
     stack->size++;
 }
 
-int pop(DynamicStack *stack){
+int pop(DynamicStack *stack) {
     int ret = -99;
 
-    if(!isEmpty(stack)){
+    if(!isEmpty(stack)) {
         StackNodePtr aux = stack->top;
         ret = aux->x;
         stack->top = stack->top->next;
         free(aux);
         stack->size--;
-    }else
+    } else
         printf("Nao e possivel excluir -> pilha esta vazia\n");
 
     return ret;
 }
 
-void destroy(DynamicStack *stack){
+void destroy(DynamicStack *stack) {
     printf("Destruindo a pilha\n");
     StackNodePtr node;
-    while(stack->top != NULL){
+    while(stack->top != NULL) {
         node = stack->top;
         stack->top = stack->top->next;
         free(node);
@@ -73,7 +73,7 @@ void destroy(DynamicStack *stack){
     stack->size = 0;
 }
 
-void printStack(DynamicStack *stack){
+void printStack(DynamicStack *stack) {
     printf("Stack = { ");
     StackNodePtr temp;
     for(temp = stack->top; temp != NULL; temp = temp->next){
@@ -82,7 +82,7 @@ void printStack(DynamicStack *stack){
     printf("}\n");
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[]) {
     DynamicStack stack;
 
     init(&stack);
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
     if(ontop != -99)
         printf("Topo: %d\n", ontop);
 
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 10; i++) {
         push(&stack, i+1);
         printStack(&stack);
         ontop = top(&stack);
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]){
     printStack(&stack);
     printf("Size = %d\n", size(&stack));
 
-    for(int i = 0; i < 11; i++){
+    for(int i = 0; i < 11; i++) {
         printStack(&stack);
         pop(&stack);
         ontop = top(&stack);
