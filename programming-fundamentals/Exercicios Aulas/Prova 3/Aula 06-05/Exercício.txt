@@ -1,0 +1,10 @@
+Faça uma biblioteca chamada "cadastro". Ela deve conter funções para:
+
+- Preencher um cadastro com informações de 4 alunos;
+- Imprimir as informações do aluno pelo índice informado pelo usuário;
+- Imprimir as informações de todos os alunos;
+- Gravar as informações dos alunos em um arquivo binário;
+- Ler as informações do aluno que estão no arquivo binário;
+- Alterar as informações de um aluno (escolhido pelo índice) e salvar novamente as informações no arquivo.
+
+O programa deve apresentar um menu que deve sempre ser apresentado após a última operação solicitada pelo cliente. Faça também uma opção para sair do programa.

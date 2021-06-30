@@ -20,6 +20,6 @@ int main(){
       printf("%d aparece %d vez(es)\n", i, count);
       count = 0;
     }
-  }
+  } 
   return 0;
 }
