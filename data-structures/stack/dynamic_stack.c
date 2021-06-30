@@ -14,6 +14,18 @@ typedef struct {
     int size;
 } DynamicStack;
 
+
+void destroy(DynamicStack *stack) {
+    printf("Destruindo a pilha\n");
+    StackNodePtr aux;
+    while(stack->top != NULL) {
+        aux = stack->top;
+        stack->top = stack->top->next;
+        free(aux);
+    }
+    stack->size = 0;
+}
+
 void init(DynamicStack *stack) {
     stack->top = NULL;
     stack->size = 0;
@@ -25,26 +37,13 @@ bool isEmpty(DynamicStack *stack) {
     return stack->size == 0;
 }
 
-int size(DynamicStack *stack) {
-    return stack->size;
-}
-
-int top(DynamicStack *stack) {
+int onTop(DynamicStack *stack) {
     if(isEmpty(stack)) {
         printf("Nenhum elemento no topo -> pilha vazia\n");
         return -99;
     }
 
     return stack->top->x;
-}
-
-void push(DynamicStack *stack, int x) {
-    StackNodePtr aux;
-    aux = (StackNodePtr)malloc(sizeof(StackNode));
-    aux->x = x;
-    aux->next = stack->top;
-    stack->top = aux;
-    stack->size++;
 }
 
 int pop(DynamicStack *stack) {
@@ -62,25 +61,28 @@ int pop(DynamicStack *stack) {
     return ret;
 }
 
-void destroy(DynamicStack *stack) {
-    printf("Destruindo a pilha\n");
-    StackNodePtr node;
-    while(stack->top != NULL) {
-        node = stack->top;
-        stack->top = stack->top->next;
-        free(node);
-    }
-    stack->size = 0;
-}
-
 void printStack(DynamicStack *stack) {
     printf("Stack = { ");
-    StackNodePtr temp;
-    for(temp = stack->top; temp != NULL; temp = temp->next){
-        printf("%d ", temp->x);
+    StackNodePtr aux;
+    for(aux = stack->top; aux != NULL; aux = aux->next){
+        printf("%d ", aux->x);
     }
     printf("}\n");
 }
+
+void push(DynamicStack *stack, int x) {
+    StackNodePtr aux;
+    aux = (StackNodePtr)malloc(sizeof(StackNode));
+    aux->x = x;
+    aux->next = stack->top;
+    stack->top = aux;
+    stack->size++;
+}
+
+int size(DynamicStack *stack) {
+    return stack->size;
+}
+
 
 int main(int argc, char *argv[]) {
     DynamicStack stack;
@@ -92,14 +94,14 @@ int main(int argc, char *argv[]) {
     else
         printf("Pilha nao esta vazia\n");
 
-    int ontop = top(&stack);
+    int ontop = onTop(&stack);
     if(ontop != -99)
         printf("Topo: %d\n", ontop);
 
     for(int i = 0; i < 10; i++) {
         push(&stack, i+1);
         printStack(&stack);
-        ontop = top(&stack);
+        ontop = onTop(&stack);
         if(ontop != -99)
             printf("Topo: %d\n", ontop);
     }
@@ -118,7 +120,7 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 11; i++) {
         printStack(&stack);
         pop(&stack);
-        ontop = top(&stack);
+        ontop = onTop(&stack);
         if(ontop != -99)
             printf("Topo: %d\n", ontop);
     }
