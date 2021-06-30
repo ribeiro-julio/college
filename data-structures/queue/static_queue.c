@@ -7,32 +7,23 @@ typedef struct {
     int array[SIZE];
     int start;
     int end;
-    int count;
+    int size;
 } StaticQueue;
 
-void init(StaticQueue *queue) {
-    queue->start = 0;
-    queue->end = -1;
-    queue->count = 0;
-}
 
 bool isEmpty(StaticQueue *queue) {
-    return queue->count == 0;
+    return queue->size == 0;
 }
 
 bool isFull(StaticQueue *queue) {
-    return queue->count == SIZE;
-}
-
-int increaseIndex(int index) {
-    return (index+1) % SIZE;
+    return queue->size == SIZE;
 }
 
 void enqueue(StaticQueue *queue, int x) {
     if(!isFull(queue)) {
         queue->end = increaseIndex(queue->end);
         queue->array[queue->end] = x;
-        queue->count++;
+        queue->size++;
     } else
         printf("Nao e possivel inserir -> fila cheia\n");
 }
@@ -43,7 +34,7 @@ int dequeue(StaticQueue *queue){
     if(!isEmpty(queue)) {
         ret = queue->array[queue->start];
         queue->start = increaseIndex(queue->start);
-        queue->count--;
+        queue->size--;
     } else
         printf("Nao e possivel remover -> fila vazia\n");
 
@@ -51,21 +42,46 @@ int dequeue(StaticQueue *queue){
 }
 
 int first(StaticQueue *queue){
+    if(isEmpty(queue)){
+        printf("Sem primeiro elemento -> Pilha vazia\n");
+        return -99;
+    }
+    
+    return queue->array[queue->start];
+}
 
+int increaseIndex(int index) {
+    return (index + 1) % SIZE;
+}
+
+void init(StaticQueue *queue) {
+    queue->start = 0;
+    queue->end = -1;
+    queue->size = 0;
 }
 
 int last(StaticQueue *queue){
-
+    if(isEmpty(queue)){
+        printf("Sem utlimo elemento -> Pilha vazia\n");
+        return -99;
+    }
+    
+    return queue->array[queue->end];
 }
 
 void printQueue(StaticQueue *queue){
     printf("Queue = { ");
-    for(int i = 0; i < queue->count; i++){
+    for(int i = 0; i < queue->size; i++){
         int index = (queue->start + i) % SIZE;
         printf("%d ", queue->array[index]);
     }
     printf("}\n");
 }
+
+int size(StaticQueue *queue){
+    return queue->size;
+}
+
 
 int main(){
     StaticQueue queue;
@@ -73,20 +89,39 @@ int main(){
     init(&queue);
     dequeue(&queue);
 
-    printQueue(&queue);
+    printf("Primeiro elemento: %d\n", first(&queue));
+    printf("Ultimo elemento: %d\n", last(&queue));
 
-    for(int i = 0; i < 12; i++)
+    printQueue(&queue);
+    printf("Tamanho: %d\n", size(&queue));
+
+    for(int i = 0; i < 12; i++){
         enqueue(&queue, i+1);
+        printQueue(&queue);
+    }
 
-    printQueue(&queue);
+    printf("Primeiro elemento: %d\n", first(&queue));
+    printf("Ultimo elemento: %d\n", last(&queue));
+
+    printf("Tamanho: %d\n", size(&queue));
     
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < 5; i++){
         dequeue(&queue);
+        printQueue(&queue);
+    }
 
-    printQueue(&queue);
+    printf("Primeiro elemento: %d\n", first(&queue));
+    printf("Ultimo elemento: %d\n", last(&queue));
 
-    for(int i = 0; i < 7; i++)
+    printf("Tamanho: %d\n", size(&queue));
+
+    for(int i = 0; i < 7; i++){
         enqueue(&queue, i+1);
+        printQueue(&queue);
+    }
 
-    printQueue(&queue);
+    printf("Primeiro elemento: %d\n", first(&queue));
+    printf("Ultimo elemento: %d\n", last(&queue));
+
+    printf("Tamanho: %d\n", size(&queue));
 }
