@@ -21,9 +21,9 @@ bool isEmptyDynamic(DynamicStack *stack) {
 }
 
 int dynamicPop(DynamicStack *stack) {
-    int ret = NULL;
+    int ret = -99;
 
-    if(!isEmpty(stack)) {
+    if(!isEmptyDynamic(stack)) {
         StackNodePtr aux = stack->top;
         ret = aux->x;
         stack->top = stack->top->next;
@@ -44,11 +44,12 @@ void dynamicPush(DynamicStack *stack, int x) { // Talvez precisa ser modificado
     stack->size++;
 }
 
-void dynamicWriteToFile(DynamicStack *stack, FILE *output) {   // Precisa ser modificado
-    printf("Stack = { ");
-    StackNodePtr aux;
-    for(aux = stack->top; aux != NULL; aux = aux->next){
-        printf("%d ", aux->x);
+int dynamicSize(DynamicStack *stack) {
+    return stack->size;
+}
+
+void dynamicWriteToFile(DynamicStack *stack, FILE *file) {   // Precisa ser modificado
+    for(int i = 0; i <= stack->size; i++) {
+        fprintf(file, "%d\n", dynamicPop(stack));
     }
-    printf("}\n");
 }

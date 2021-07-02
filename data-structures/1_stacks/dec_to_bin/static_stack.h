@@ -4,18 +4,19 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define SIZE 15
+// 32 bits + \n
+#define SIZE 33
 
 typedef struct {
     int array[SIZE];
     int top;
 } StaticStack;
 
-void init(StaticStack *stack);
-bool isEmpty(StaticStack *stack);
-void isFull(StaticStack *stack);
-int* pop(StaticStack *stack);
-void push(StaticStack *stack, int x);
-void writeToFile(StaticStack *stack, FILE *output);
+void staticInit(StaticStack *stack);
+bool isEmptyStatic(StaticStack *stack);
+void isFullStack(StaticStack *stack);
+int* staticPop(StaticStack *stack);
+void staticPush(StaticStack *stack, int x);
+void staticWriteToFile(StaticStack *stack, FILE *output);
 
 #endif

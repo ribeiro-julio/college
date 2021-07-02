@@ -22,6 +22,7 @@ void dynamicInit(DynamicStack *stack);
 bool isEmptyDynamic(DynamicStack *stack);
 int dynamicPop(DynamicStack *stack);
 void dynamicPush(DynamicStack *stack, int x);
-void dynamicWriteToFile(DynamicStack *stack, FILE *output);
+int dynamicSize(DynamicStack *stack);
+void dynamicWriteToFile(DynamicStack *stack, FILE *file);
 
 #endif
