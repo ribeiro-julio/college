@@ -40,24 +40,25 @@ int staticPop(StaticStack *stack) {
     return ret;
 }
 
-int staticSize(StaticStack *stack) {
-    return stack->top;
-}
-
-void staticWriteToFile(StaticStack *stack, FILE *file) {
-    int size = staticSize(stack);
-    for(int i = 0; i < size; i++) {
-        fprintf(file, "%d", staticPop(stack));
-    }
-    fprintf(file, "\n");
-}
-
 void staticPush(StaticStack *stack, int x) {
     if(!isFullStatic(stack)) {
         stack->array[stack->top] = x;
         stack->top++;
     } else
         printf("Nao e possivel inserir -> pilha cheia\n");
+}
+
+int staticSize(StaticStack *stack) {
+    return stack->top;
+}
+
+// Escreve no arquivo a pilha estática que corresponde a um numero decimal convertido
+void staticWriteToFile(StaticStack *stack, FILE *file) {
+    int size = staticSize(stack);
+    for(int i = 0; i < size; i++) {
+        fprintf(file, "%d", staticPop(stack));
+    }
+    fprintf(file, "\n");
 }
 
 /*
@@ -130,6 +131,7 @@ int dynamicSize(DynamicStack *stack) {
     return stack->size;
 }
 
+// Escreve no arquivo a pulha dinâmica que corresponde a um numero decimal convertido
 void dynamicWriteToFile(DynamicStack *stack, FILE *file) {
     int size = dynamicSize(stack);
     for(int i = 0; i < size; i++) {
@@ -148,6 +150,7 @@ void dynamicWriteToFile(DynamicStack *stack, FILE *file) {
  *  Começo funções auxiliares
  */
 
+// Conta as linhas do arquivo -> exclui linhas vazias na contagem
 int countLines(FILE *file) {
     int lines = 0;
     char current, previous;
@@ -168,6 +171,7 @@ int countLines(FILE *file) {
     return lines;
 }
 
+// Verifica se a string capturada do arquivo é um inteiro valido
 bool isInt(char *string) {
     for(int i = 0; i < 11; i++) {
         if(string[i] == '\0')
@@ -179,9 +183,10 @@ bool isInt(char *string) {
     return true;
 }
 
+// Preenche a pilha estática com os decimais coletados do arquivo de entrada
 bool fillDecimalStaticStack(int lines, FILE *file, StaticStack *input_integers) {
     // qnt de digitos de 2^32 + \0
-    char line[11] = "";
+    char line[12] = "";
 
     for(int i = 0; i < lines; i++) {
         fgets(line, 10, file);
@@ -191,6 +196,7 @@ bool fillDecimalStaticStack(int lines, FILE *file, StaticStack *input_integers) 
         if(i == 0)
             continue;
 
+        // Se a string lida não for um int valido retorna falso, senao, adiciona na pilha de numeros decimais
         if(!isInt(line))
             return false;
         else
@@ -200,9 +206,10 @@ bool fillDecimalStaticStack(int lines, FILE *file, StaticStack *input_integers) 
     return true;
 }
 
+// Preenche a pilha dinamica com os decimais coletados do arquivo de entrada
 bool fillDecimalDynamicStack(int lines, FILE *file, DynamicStack *input_integers) {
     // qnt de digitos de 2^32 + \0
-    char line[11] = "";
+    char line[12] = "";
 
     for(int i = 0; i < lines; i++) {
         fgets(line, 10, file);
@@ -221,36 +228,38 @@ bool fillDecimalDynamicStack(int lines, FILE *file, DynamicStack *input_integers
     return true;
 }
 
-void dynamicDecToBin(int dec, DynamicStack *bin, FILE *file) {
-    if(dec == 0)
-        dynamicPush(bin, 0);
-
-    while(dec != 0) {
-        if(dec % 2 == 1)
-            dynamicPush(bin, 1);
-        else
-            dynamicPush(bin, 0);
-        
-        dec /= 2;
-    }
-
-    dynamicWriteToFile(bin, file);
-}
-
+// Faz a conversão de inteiro para decimal preenchendo uma pilha estática com os 0s e 1s
 void staticDecToBin(int dec, StaticStack *bin, FILE *file) {
     if(dec == 0)
     staticPush(bin, 0);
 
     while(dec != 0) {
-        if(dec % 2 == 1)
-            staticPush(bin, 1);
-        else
+        if(dec % 2 == 0)
             staticPush(bin, 0);
+        else
+            staticPush(bin, 1);
         
         dec /= 2;
     }
 
     staticWriteToFile(bin, file);
+}
+
+// Faz a conversão de inteiro para decimal preenchendo uma pilha estática com os 0s e 1s
+void dynamicDecToBin(int dec, DynamicStack *bin, FILE *file) {
+    if(dec == 0)
+        dynamicPush(bin, 0);
+
+    while(dec != 0) {
+        if(dec % 2 == 0)
+            dynamicPush(bin, 0);
+        else
+            dynamicPush(bin, 1);
+        
+        dec /= 2;
+    }
+
+    dynamicWriteToFile(bin, file);
 }
 
 /*
@@ -262,13 +271,13 @@ void staticDecToBin(int dec, StaticStack *bin, FILE *file) {
 int main(int argc, char *argv[]) {
     if(argc < 3) {
         printf("Nao foram fornecidos todos os parametros [nome_do_programa entrada.txt saida.txt]\n");
-        //exit(1);
+        exit(1);
     }
 
-    FILE *input = fopen("./input/valido.txt", "r");  //  arrumar
-    //FILE *input = fopen(argv[1], "r");
-    FILE *output = fopen("./output/valido.txt", "w");   // arrumar
-    //FILE *output = fopen(argv[2], "w");
+    //FILE *input = fopen("./input/valido.txt", "r");  //  arrumar
+    FILE *input = fopen(argv[1], "r");
+    //FILE *output = fopen("./output/valido.txt", "w");   // arrumar
+    FILE *output = fopen(argv[2], "w");
     if(input == NULL) {
         printf("Erro ao abrir o arquivo de entrada\n");
         exit(2);
@@ -280,6 +289,7 @@ int main(int argc, char *argv[]) {
 
     int lines = countLines(input);
 
+    // Arquivo vazio ou com apenas o idetificador (e ou d)
     if(lines == 0 || lines == 1) {
         printf("Arquivo invalido! [arquivo vazio e/ou sem numeros]\n");
         fclose(input);
@@ -314,6 +324,9 @@ int main(int argc, char *argv[]) {
         staticInit(&output_binary);
         while(staticSize(&input_integers) != 0)
             staticDecToBin(staticPop(&input_integers), &output_binary, output);
+        
+        printf("Conversao realizada com sucesso\n");
+        
     } else if(identifier == 'd') {
         DynamicStack input_integers;
         dynamicInit(&input_integers);
@@ -328,11 +341,13 @@ int main(int argc, char *argv[]) {
         }
 
         DynamicStack output_binary;
-        while(dynamicSize(&input_integers) != 0) {
-            dynamicInit(&output_binary);
+        dynamicInit(&output_binary);
+        while(dynamicSize(&input_integers) != 0)
             dynamicDecToBin(dynamicPop(&input_integers), &output_binary, output);
-            destroy(&output_binary);
-        }
+
+        printf("Conversao realizada com sucesso\n");
+
+        destroy(&output_binary);
     }
 
     return 0;
