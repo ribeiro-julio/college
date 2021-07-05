@@ -274,9 +274,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    //FILE *input = fopen("./input/valido.txt", "r");  //  arrumar
     FILE *input = fopen(argv[1], "r");
-    //FILE *output = fopen("./output/valido.txt", "w");   // arrumar
     FILE *output = fopen(argv[2], "w");
     if(input == NULL) {
         printf("Erro ao abrir o arquivo de entrada\n");
