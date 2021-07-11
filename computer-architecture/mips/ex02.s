@@ -27,11 +27,11 @@ main:
     j OUTPUT                    # se não entrar no if, pula para o print
 
     IF:
-        addi $t2, $zero, 1      # atualiza x se entrar no if (x = 1) 
+        addi $t2, $zero, 1      # atualiza x se entrar no if (x = 1)
     
     OUTPUT:
         addi $v0, $zero, 1      # printf("%i", x)
-        add $a0, $zero, $t2     # 
+        add $a0, $zero, $t2     #
         syscall                 #
     
     addi $v0, $zero, 10         # Sai do programa

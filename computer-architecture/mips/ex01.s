@@ -22,9 +22,9 @@ main:
     add $t2, $zero, $t1
 
     OUTPUT:
-        addi $v0, $zero, 1      # printf("%i", m)
-        add $a0, $zero, $t2     # 
-        syscall                 # 
+        addi $v0, $zero, 1      # passa código 1 (print int) para registrador v0
+        add $a0, $zero, $t2     # passa os argumentos para imprimit (o valor int)
+        syscall                 # faz a chamada de sistema
     
     addi $v0, $zero, 10     # Sai do programa
-    syscall                 # 
+    syscall                 #
