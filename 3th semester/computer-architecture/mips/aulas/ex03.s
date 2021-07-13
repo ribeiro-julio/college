@@ -9,6 +9,7 @@
 # printf("%i", k);
 
 .data
+    newline: .asciiz "\n"
 
 .text
 main:
@@ -26,6 +27,10 @@ main:
     OUTPUT:
         addi $v0, $zero, 1
         add $a0, $zero, $t0
+        syscall
+
+        addi $v0, $zero, 4
+        la $a0, newline
         syscall
 
         addi $v0, $zero, 1      # printf("%i", k)

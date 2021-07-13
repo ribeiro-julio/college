@@ -1,5 +1,12 @@
 # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
+# int sum(int n, int acc){
+#     if(n > 0)
+#         return sum(n - 1, acc + n);
+#     else
+#         return acc;
+# }
+
 .data
 
 .text
@@ -36,8 +43,8 @@ main:
         lw $ra, 8($sp)             # restaura ra
         addi $sp, $sp, 12          # Retira 3 itens da stack
 
-        #add $v0, $a1, $a0        # retorna n-1
-        add $v0, $a1, $zero          # retorna acc
+        #add $v0, $a1, $a0          # retorna n-1
+        #add $v0, $a1, $zero        # retorna acc
 
         jr $ra
 
