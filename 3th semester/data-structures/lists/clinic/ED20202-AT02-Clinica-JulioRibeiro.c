@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 
 
@@ -77,17 +78,6 @@ void insert(List *list, Patient patient) {
     list->count++;
 }
 
-Patient search(List *list, int patient_id) {
-    Patient ret = { .id = -99, .name = "", .sex = ' ', .weight = 0.0, .height = 0};
-    ListNodePtr aux;
-    for(aux = list->start; aux != NULL; aux = aux->next) {
-        if(aux->patient.id == patient_id)
-            ret = aux->patient;
-    }
-
-    return ret;
-}
-
 /*
  *  Fim funções doubly linked list
  */
@@ -98,79 +88,69 @@ Patient search(List *list, int patient_id) {
  *  Começo funções auxiliares
  */
 
-// Conta as linhas do arquivo -> exclui linhas vazias na contagem
-int countLines(FILE *file) {
-    int lines = 0;
-    char current, previous;
-
-    current = fgetc(file);
-    while (current != EOF) {
-        if (current == '\n' && previous != '\n')
-            lines++;
-        previous = current;
-        current = fgetc(file);
-    }
-
-    if (previous != '\n')
-        lines++;
-
-    rewind(file);
-
-    return lines;
-}
-
-// LER PRIMEIRO CARACTERE DA LINHA, VERIFICAR SE É UM { E DEPOIS LER O RESTO DA LINHA. NÃO PRECISA CONTAR AS LINHAS
 // Preenche a lista com os elementos do arquivo -> retorna o codigo da operacao (se for valido) e o id do paciente a pesquisar (se codigo for 3)
-void handleFile(List *list, FILE *file, int lines, int *operation, int *patient_id) {
+bool handleFile(List *list, FILE *file, int *operation, int *patient_id) {
     Patient patient;
-    char line[10];
-    for(int i = 1; i <= lines; i++) {
-        if(fscanf(file, "{%d,%[^,],%c,%f,%d}\n", &patient.id, patient.name, &patient.sex, &patient.weight, &patient.height) == 5)
-            insert(list, patient);
-        else {
-            if(lines == i && *operation == -99) {    // Ultima linha do arquivo e ainda não setou a operação (não será uma busca)
-                fgets(line, 1, file);
-                if(line[0] == '1' || line[0] == '2' || line[0] == '3')
-                    *operation = atoi(line);
-            } else {
-                if(*operation == -99) {
-                    fgets(line, 1, file);
-                    if(line[0] == '1' || line[0] == '2' || line[0] == '3')
-                        *operation = atoi(line);
-                } else {
-                    fgets(line, 9, file);
-                    *patient_id = atoi(line);
-                }
+    char line[10] = "";
+
+    line[0] = fgetc(file);
+
+    while(1){
+        if(line[0] == '{') {    // Se o primeiro caractere da linha for um { segue com a leitura formatada
+            if(fscanf(file, "%d,%[^,],%c,%f,%d}\n", &patient.id, patient.name, &patient.sex, &patient.weight, &patient.height) == 5) {  // Devem ser lidos 5 dados no formato indicado
+                insert(list, patient);
+                line[0] = fgetc(file);      // Le o primeiro caractere da proxima linha
+            } else {        // Se os dados dos pacientes não estiver no formato especificado retorna um falso
+                return false;
             }
+        } else {
+            if(line[0] == '1' || line[0] == '2' || line[0] == '3') {
+                char next = fgetc(file);
+                if(next == '\r' || next == '\n' || next == EOF)    // Entra aqui se for um digito único (1, 2, ou 3), impossibilitando 10, 20, 30...
+                    *operation = atoi(line);
+            }
+            break;
         }
     }
+
+    if(*operation == 3) {       // Se for uma busca tem que ler o id indicado no arquivo
+        fgets(line, 9, file);
+        if(line[0] == '\n')     // Se tiver lido um \n (no caso de ter /r/n le novamente) para não dar erros
+            fgets(line, 9, file);
+        *patient_id = atoi(line);
+    }
+
+    return true;
+}
+
+// Procura pelo paciente na lista, se encontrar escreve no arquivo, se nao, escreve uma mensagem de erro no arquivo
+void searchPatient(List *list, int patient_id, FILE *file) {
+    ListNodePtr aux;
+    for(aux = list->start; aux != NULL; aux = aux->next) {
+        if(aux->patient.id == patient_id) {
+            fprintf(file, "{%d,%s,%c,%.1f,%d}", aux->patient.id, aux->patient.name, aux->patient.sex, aux->patient.weight, aux->patient.height);
+            return;
+        }
+    }
+
+    fprintf(file, "Paciente nao encontrado no arquivo de entrada!");
 }
 
 // Escreve os pacientes em ordem crescente no arquivo de saída
 void writeListToFileIncreasing(List *list, FILE *file) {
     ListNodePtr aux;
-    fprintf(file, "{");
-    for(aux = list->start; aux != NULL; aux = aux->next) {
-        fprintf(file, "%d,%s,%c,%.1f,%d", aux->patient.id, aux->patient.name, aux->patient.sex, aux->patient.weight, aux->patient.height);
-    }
-    fprintf(file, "}\n");
+    for(aux = list->start; aux != NULL; aux = aux->next)
+        fprintf(file, "{%d,%s,%c,%.1f,%d}\n", aux->patient.id, aux->patient.name, aux->patient.sex, aux->patient.weight, aux->patient.height);
 }
 
 // Escreve os pacientes em ordem decrescente no arquivo de saída
 void writeListToFileDecreasing(List *list, FILE *file) {
     ListNodePtr aux;
-    fprintf(file, "{");
     for(aux = list->start; aux->next != NULL; aux = aux->next);     // Vai para o ultimo elemento
     do {
-        fprintf(file, "%d,%s,%c,%.1f,%d", aux->patient.id, aux->patient.name, aux->patient.sex, aux->patient.weight, aux->patient.height);
+        fprintf(file, "{%d,%s,%c,%.1f,%d}\n", aux->patient.id, aux->patient.name, aux->patient.sex, aux->patient.weight, aux->patient.height);
         aux = aux->previous;
     } while(aux != NULL);
-    fprintf(file, "}\n");
-}
-
-// Procura pelo paciente na lista, se encontrar escreve no arquivo, se nao, escreve uma mensagem de erro no arquivo
-void searchPatient(List *list, FILE *file) {
-
 }
 
 /*
@@ -182,30 +162,39 @@ void searchPatient(List *list, FILE *file) {
 int main(int argc, char *argv[]) {
     if(argc != 3) {
         printf("Quantidade invalida de parametros -> [nome_do_programa entrada.txt saida.txt]\n");
-        //exit(1);
+        exit(1);
     }
 
-    //FILE *input = fopen(argv[1], "r");
-    FILE *input = fopen("./input/entrada03.txt", "r");
-    //FILE *output = fopen(argv[2], "w");
+    FILE *input = fopen(argv[1], "r");
+    FILE *output = fopen(argv[2], "w");
     if(input == NULL) {
         printf("Erro ao abrir o arquivo de entrada\n");
         exit(2);
     }
-    //if(output == NULL) {
-        //printf("Erro ao abrir o arquivo de saida\n");
-        //exit(2);
-    //}
+    if(output == NULL) {
+        printf("Erro ao abrir o arquivo de saida\n");
+        exit(2);
+    }
 
-    int lines = countLines(input);      // Conta a quantidade de linhas não nulas
     int operation = -99, patient_id = -99;
     List patientList;
     init(&patientList);
-    handleFile(&patientList, input, lines, &operation, &patient_id);
+    if(handleFile(&patientList, input, &operation, &patient_id)) {
+        if(operation == 1)
+            writeListToFileIncreasing(&patientList, output);
+        else if (operation == 2)
+            writeListToFileDecreasing(&patientList, output);
+        else if (operation == 3)
+            searchPatient(&patientList, patient_id, output);
+        else
+            fprintf(output, "Arquivo em formato invalido!");
+    } else {
+        fprintf(output, "Arquivo em formato invalido!");
+    }
 
-    
+    destroy(&patientList);
+    fclose(input);
+    fclose(output);
 
-
-    
     return 0;
 }
