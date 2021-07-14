@@ -1,0 +1,30 @@
+|   $ra   |
+|   10    |
+|   $ra   |
+|    9    |
+|   $ra   |
+|    8    |
+|   $ra   |
+|    7    |
+|   $ra   |
+|    6    |
+|   $ra   |
+|    5    |
+|   $ra   |
+|    4    |
+|   $ra   |
+|    3    |
+|   $ra   |
+|    2    |
+|   $ra   |
+|    1    |
+|   $ra   |
+|    0    |
+|   $ra   |
+|   -1    |
+
+- O programa começa armazenando o endereço $ra da função main e o primeiro argumento fornecido (10), 
+depois vai executando, como a condição de parada da recursão usada no meu código é que n seja menor do que zero, 
+o programa continua colocando elementos na stack, um abaixo do outro, até que o valor de n seja -1 (-1 é menor que zero), 
+a partir deste momento, ele começa a remover os valores, de dois em dois da stack ($ra e o valor de n), voltando para o 
+ultimo endereço de $ra registrado, até chegar na função main.

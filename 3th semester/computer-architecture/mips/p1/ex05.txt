@@ -1,0 +1,39 @@
+Instruções do tipo J são instruções de pulos incondicionais. A estrutura de uma operação do tipo J é a seguinte:
+opcode -> 6 bits -> opcode da operação
+word address -> 26 bits -> endereço para onde será realizado o salto.
+
+O exercício 4 não tem exemplo de instruções to tipo R, mas pode ser citada a instrução j e o seu código binário:
+j target -> 000010 (endereço de 26 bits do destino)
+
+
+Instruções do tipo R, são instruções realizadas entre registradores. Compõem a maioria das instruções lógicas e aritméticas, 
+com exceção de instruções imediatas. A estrutura de uma operação do tipo R é a seguinte:
+opcode -> 6 bits -> opcode da operação
+rs -> 5 bits -> primeiro registrador fonte 
+rt -> 5 bits -> segundo registrador fonte
+td -> 5 bits -> registrador destino (que receberá o resultado)
+shamt -> 5 bits -> quantidade de deslocamento (é utilizada em operações de deslocamento)
+funct -> 6 bits -> function (variações da operação)
+
+Exemplos de instruções do tipo R e seus respectivos códigos binários do exercício 4 são:
+sll $t0, $s0, 2 -> 000000 00000 10000 01000 00010 000000
+add $t0, $s6, $t0 -> 000000 10110 01000 01000 00000 100000
+sll $t1, $s1, 2 -> 000000 00000 10001 01001 00010 000000
+add $t1, $s7, $t1 -> 000000 10111 01001 01001 00000 100000
+add $t0, $t0, $s0 -> 000000 01000 10000 01000 00000 100000
+Se observa 6 conjuntos de bits, que são formados, respectivamente, por 6, 5, 5, 5, 5 e 6 bits.
+
+
+Instruções do tipo I são realizadas com valores imediatos (ou constantes). São instruções de transferência de dados, 
+desvios condicionais e instruções com valores constantes. A estrutura de uma operação do tipo I é a seguinte:
+opcode -> 6 bits -> opcode da operação
+rs -> 5 bits -> registrador fonte
+rt -> 5 bits -> registrador destino
+i -> 16 bits -> valor imediato (constante)
+
+Exemplos de instruções do tipo I e seus respectivos códigos binários do exercício 4 são:
+lw $s0, 4($t0) -> 100011 01000 10000 0000000000000100
+addi $t2, $t0, 4 -> 001000 01000 01010 0000000000000100
+lw $t0, 0($t2) -> 100011 01010 01000 0000000000000000
+sw $t0, 0($t1) -> 101011 01001 01000 0000000000000000
+Se observa 4 conjuntos de bits, que são formados, respectivamente, por 6, 5, 5 e 16 bits.
