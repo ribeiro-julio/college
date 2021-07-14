@@ -132,7 +132,7 @@ void searchPatient(List *list, int patient_id, FILE *file) {
             return;
         }
     }
-
+    
     fprintf(file, "Paciente nao encontrado no arquivo de entrada!");
 }
 
