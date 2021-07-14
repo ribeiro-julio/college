@@ -129,14 +129,9 @@ int removeElement(List *list, int x) {
         ListNodePtr toRemove = aux->next;
         ret = toRemove->x;
 
-        if(aux->next->next == NULL && x == aux->next->x) {       // Ultimo nó -> Checar se está certo
-            aux->next = NULL;
-            free(toRemove);
-            list->count--;
-            return ret;
-        }
+        if(aux->next->next != NULL)       // Ultimo nó
+            aux->next->next->previous = aux;
 
-        aux->next->next->previous = aux;
         aux->next = aux->next->next;
         free(toRemove); 
         list->count--;
@@ -215,6 +210,8 @@ int main() {
     removeElement(&list, 4);
     printListIncreasing(&list);
     removeElement(&list, 6);
+    printListIncreasing(&list);
+    removeElement(&list, 7);
     printListIncreasing(&list);
 
     printListDecreasing(&list);
