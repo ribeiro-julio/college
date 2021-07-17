@@ -32,8 +32,6 @@ void init(DynamicStack *stack) {
 }
 
 bool isEmpty(DynamicStack *stack) {
-    // size == 0
-    // top == null
     return stack->size == 0;
 }
 
