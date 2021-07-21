@@ -1,0 +1,161 @@
+1 -> Uma pilha é um estrutura de dados linear que obedece a ordem LIFO ou FILO. Os últimos
+dados inseridos nesta estrutura são os primeiros a sair, e para remover elementos mais
+profundos devemos primeiro remover os elementos que estão "em cima" deste.
+
+
+2 -> Pilhas são utilizadas em aplicações que necessitam ivsersão da entrada/saída, como
+um conversor decimal/binário, pilha de alterações em programas de edição (possibilitando
+usar ctrl + z), gerenciamento de memória, avaliação de expressões, entre outras.
+
+
+3 -> Uma fila é uma estrutura de dados linear que obedece a ordem LIFO: o primeiro elemento
+a entrar é o primeiro a sair. A entrada de dados acontece em uma extremidade da fila e a
+saída em outra. 
+
+
+4 -> Filas podem ser usadas em aplicações reais, como filas de esperas em callcenters ou
+aplicações online que possuem uma fila de espera, gerenciamento de processos (primeiro
+a chegar é o primeiro a ser atendido), entre outras.
+
+
+5 -> Uma pilha é LIFO e uma fila FIFO. Uma pilha possui apenas umas expremidade para
+insersão e remoção de dados enquanto que uma fila possui duas (uma para cada).
+
+
+6 -> Alocação estática é limitada em quantidade de elementos. O tamanho da estrutura
+é definido uma vez e não pode ser alterado.
+
+
+7 -> Alicação dinâmica é "ilimitada" (limitada a memória disponível pelo hardware).
+O tamanho da estrutura não é pré-defindo e cresce/diminui pela alocação ou liberação
+de memória.
+
+
+8 -> Se deve saber o tamanho máximo que a estrutura pode alcançar, se se sabe este
+dado é possível limitar a estrutura em um tamanho e não é necessário utilizar alocação
+dinâmica. Se não se sabe o tamanho máximo ou se quer uma estrutura sem limites, que
+pode variar o seu tamanho na aplicação é necessário o uso de variáveis dinâmicas.
+
+
+9-> Avaliação de expressões; Checar correspondência de parênteses em uma expressão;
+Conversão de tipos (decimal para binário por exemplo); Gerenciamento de memória.
+
+
+10 -> Requisição de aplicações em processos single-threaded; Filas que representam
+filas da vida real (ordem de chegada deve ser obedecida); Cuidar de interrupções
+de programas (primeiro a chegar é o primeiro a ser atendido).
+
+
+11 -> Uma fila pode ser implementada com duas pilhas. Para obedecer a característica
+FIFO, devemos popular a primeira pilha com as entradas e depois passar os dados dessa
+pilha para outra com operações pop e push. Desta forma a ordem de saída da primeira
+pilha é invertida. Esquema abaixo:
+Pilha 1: {1, 2, 3, 4} -> Ordem de saída da Pilha 1 (operações pop para Pilha 2)
+Pilha 2: {4, 3, 2, 1} -> Odem de saída da fila
+
+
+12 -> A mesma lógica vale para formar uma pilha com duas filas.
+Entrada Fila 1 -> {4, 3, 2, 1} -> Saída Fila 1 (operações dequeue para Fila 2)
+Entrada Fila 2 -> {1, 2, 3, 4} -> Ordem de saída da Pilha
+
+
+13 -> 
+void transferirPilha(Stack pilha1, Stack pilha2) {  // Considerando que pop() retorna o valor excluído e pilha tem contador interno
+    while(pilha1.size != 0)
+        push(pilha2, pop(pilha1));
+}
+        OU
+void transferirPilha(Stack pilha1, Stack pilha2) {  // Considerando que pop() retorna o valor excluído e pilha sem contador interno
+    int x = pop(pilha1)
+    while(x != -99) {
+        push(pilha2, x);
+        x = pop(pilha1);
+    }
+}
+
+
+14 -> 
+int verificarMaior(Stack pilha1, Stack pilha2) {
+    Stack aux;
+    int count1 = 0, count2 = 0;
+
+    int x = pop(pilha1);
+    while(x != -99) {
+        count1++;
+        push(aux, x);
+        x = pop(pilha1);
+    }
+    x = pop(aux);
+    while(x != -99) {
+        push(pilha1, x);
+        x = pop(aux);
+    }
+
+    x = pop(pilha2);
+    while(x != -99) {
+        count2++;
+        push(aux, x);
+        x = pop(pilha2);
+    }
+    x = pop(aux);
+    while(x != -99) {
+        push(pilha2, x);
+        x = pop(aux);
+    }
+
+    if(count1 > count2)
+        return 1;
+    if(count2 > count1)
+        return 2;
+    else
+        return 0;
+}
+
+
+15 ->
+bool procuraValor(Stack pilha, int x) {
+    int aux = pop(pilha);
+    while(aux != x) {
+        if(aux == x)
+            return true;
+    }
+
+    return false;
+}
+
+
+16 ->
+bool iguais(Stack pilha1, Stack pilha2) {
+    Stack aux1; Stack aux2;
+    int count = 0;
+    int x1 = pop(pilha1);
+    int x2 = pop(pilha2);
+    while(x1 == x2) {
+        count++;
+        push(aux1, x1);
+        push(aux2, x2);
+        x1 = pop(pilha1);
+        x2 = pop(pilha2);
+        if(x1 != x2) {
+            while(count != 0) {
+                push(pilha1, pop(aux1));
+                push(pilha2, pop(aux2));
+                count--;
+            }
+            return false;
+        }
+    }
+    while(count != 0) {
+        push(pilha1, pop(aux1));
+        push(pilha2, pop(aux2));
+        count--;
+    }
+    return true;
+}
+
+
+17 ->
+    Falta fazer
+
+
+18 ->
