@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
-
 typedef struct ListNode *ListNodePtr;
 
 typedef struct ListNode {
@@ -16,7 +14,6 @@ typedef struct {
     ListNodePtr start;
     int count;
 } List;
-
 
 
 void destroy(List *list) {
@@ -46,7 +43,7 @@ bool isEmpty(List *list) {
     return list->count == 0; 
 }
 
-void insert(List *list, int x) {        // Precisa ser alterado
+void insert(List *list, int x) {
     ListNodePtr new;
     new = (ListNodePtr)malloc(sizeof(ListNode));
     new->x = x;
@@ -129,12 +126,13 @@ int removeElement(List *list, int x) {
         ListNodePtr toRemove = aux->next;
         ret = toRemove->x;
 
-        if(aux->next->next != NULL)       // Ultimo nó
+        if(aux->next->next != NULL)       // Não é o ultimo nó
             aux->next->next->previous = aux;
 
         aux->next = aux->next->next;
         free(toRemove); 
         list->count--;
+
         return ret;
     }
 }
@@ -167,7 +165,6 @@ bool searchSlow(List *list, int x) {    // Nao otimizado -> pior caso
 int size(List *list) {
     return list->count;
 }
-
 
 
 int main() {
