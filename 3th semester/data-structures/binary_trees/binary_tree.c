@@ -3,7 +3,6 @@
 #include <stdbool.h>
 
 
-
 typedef struct TreeNode *TreeNodePtr;
 
 typedef struct TreeNode {
@@ -11,7 +10,6 @@ typedef struct TreeNode {
     TreeNodePtr right;
     TreeNodePtr left;
 } TreeNode;
-
 
 
 void init(TreeNodePtr *tree) {
@@ -65,6 +63,71 @@ void inOrder(TreeNodePtr *tree) {
     inOrder(&(*tree)->right);
 }
 
+bool search(TreeNodePtr *tree, int x) {
+    if((*tree) == NULL)
+        return false;
+
+    if((*tree)->x == x)
+        return true;
+
+    if(x > (*tree)->x) 
+        return search(&(*tree)->right, x);
+    else
+        return search(&(*tree)->left, x);
+}
+
+void destroy(TreeNodePtr *tree) {
+    if((*tree) != NULL) {
+        destroy(&(*tree)->left);
+        destroy(&(*tree)->right);
+        free(*tree);
+        *tree = NULL;
+    }
+}
+
+TreeNodePtr getMaxAux(TreeNodePtr *tree) {
+    TreeNodePtr ret;
+
+    if((*tree)->right == NULL) {
+        ret = (*tree);
+        (*tree) = (*tree)->left;
+        return ret;
+    }
+
+    return getMaxAux(&(*tree)->right);
+}
+
+bool removeNode(TreeNodePtr *tree, int x) {
+    if((*tree) == NULL)
+        return false;
+    
+    if((*tree)->x == x) {
+        TreeNodePtr aux = (*tree);
+
+        if((*tree)->right != NULL && (*tree)->left == NULL)
+            (*tree) = (*tree)->right;
+
+        else if((*tree)->right == NULL && (*tree)->left == NULL)
+            (*tree) = NULL;
+
+        else if((*tree)->right == NULL && (*tree)->left != NULL)
+            (*tree) = (*tree)->left;
+
+        else {
+            aux = getMaxAux(&(*tree)->left);
+            (*tree)->x = aux->x;
+        }
+
+        free(aux);
+        return true;
+    }
+
+
+    if(x > (*tree)->x)
+        return removeNode(&(*tree)->right, x);
+    else
+        return removeNode(&(*tree)->left, x);
+}
 
 
 int main() {
@@ -98,6 +161,65 @@ int main() {
 
     if(!isEmpty(&treeRoot))
         printf("Arvore nao vazia\n");
+    
+    if(search(&treeRoot, 5))
+        printf("Achou\n");
+    else
+        printf("Nao achou\n");
+
+    if(search(&treeRoot, 10))
+        printf("Achou\n");
+    else
+        printf("Nao achou\n");
+
+    if(search(&treeRoot, 14))
+        printf("Achou\n");
+    else
+        printf("Nao achou\n");
+
+    if(search(&treeRoot, 0))
+        printf("Achou\n");
+    else
+        printf("Nao achou\n");
+
+    if(search(&treeRoot, 3))
+        printf("Achou\n");
+    else
+        printf("Nao achou\n");
+    
+    printf("Pre Order = { ");
+    preOrder(&treeRoot);
+    printf("}\n");
+
+    removeNode(&treeRoot, 6);
+    printf("Pre Order = { ");
+    preOrder(&treeRoot);
+    printf("}\n");
+
+    removeNode(&treeRoot, 5);
+    printf("Pre Order = { ");
+    preOrder(&treeRoot);
+    printf("}\n");
+
+    removeNode(&treeRoot, 3);
+    printf("Pre Order = { ");
+    preOrder(&treeRoot);
+    printf("}\n");
+
+    removeNode(&treeRoot, 8);
+    printf("Pre Order = { ");
+    preOrder(&treeRoot);
+    printf("}\n");
+
+    removeNode(&treeRoot, 4);
+    printf("Pre Order = { ");
+    preOrder(&treeRoot);
+    printf("}\n");
+
+    destroy(&treeRoot);
+
+    if(isEmpty(&treeRoot))
+        printf("Arvore vazia\n");
 
     return 0;
 }
