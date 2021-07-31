@@ -12,8 +12,37 @@ typedef struct TreeNode {
 } TreeNode;
 
 
+void destroy(TreeNodePtr *tree) {
+    if((*tree) != NULL) {
+        destroy(&(*tree)->left);
+        destroy(&(*tree)->right);
+        free(*tree);
+        *tree = NULL;
+    }
+}
+
+TreeNodePtr getMaxAux(TreeNodePtr *tree) {
+    TreeNodePtr ret;
+
+    if((*tree)->right == NULL) {
+        ret = (*tree);
+        (*tree) = (*tree)->left;
+        return ret;
+    }
+
+    return getMaxAux(&(*tree)->right);
+}
+
 void init(TreeNodePtr *tree) {
     (*tree) = NULL;
+}
+
+void inOrder(TreeNodePtr *tree) {
+    if((*tree) == NULL)
+        return;
+    inOrder(&(*tree)->left);
+    printf("%d ", (*tree)->x);
+    inOrder(&(*tree)->right);
 }
 
 bool isEmpty(TreeNodePtr *tree) {
@@ -55,48 +84,6 @@ void postOrder(TreeNodePtr *tree) {
     printf("%d ", (*tree)->x);
 }
 
-void inOrder(TreeNodePtr *tree) {
-    if((*tree) == NULL)
-        return;
-    inOrder(&(*tree)->left);
-    printf("%d ", (*tree)->x);
-    inOrder(&(*tree)->right);
-}
-
-bool search(TreeNodePtr *tree, int x) {
-    if((*tree) == NULL)
-        return false;
-
-    if((*tree)->x == x)
-        return true;
-
-    if(x > (*tree)->x) 
-        return search(&(*tree)->right, x);
-    else
-        return search(&(*tree)->left, x);
-}
-
-void destroy(TreeNodePtr *tree) {
-    if((*tree) != NULL) {
-        destroy(&(*tree)->left);
-        destroy(&(*tree)->right);
-        free(*tree);
-        *tree = NULL;
-    }
-}
-
-TreeNodePtr getMaxAux(TreeNodePtr *tree) {
-    TreeNodePtr ret;
-
-    if((*tree)->right == NULL) {
-        ret = (*tree);
-        (*tree) = (*tree)->left;
-        return ret;
-    }
-
-    return getMaxAux(&(*tree)->right);
-}
-
 bool removeNode(TreeNodePtr *tree, int x) {
     if((*tree) == NULL)
         return false;
@@ -127,6 +114,20 @@ bool removeNode(TreeNodePtr *tree, int x) {
         return removeNode(&(*tree)->right, x);
     else
         return removeNode(&(*tree)->left, x);
+}
+
+
+bool search(TreeNodePtr *tree, int x) {
+    if((*tree) == NULL)
+        return false;
+
+    if((*tree)->x == x)
+        return true;
+
+    if(x > (*tree)->x) 
+        return search(&(*tree)->right, x);
+    else
+        return search(&(*tree)->left, x);
 }
 
 
