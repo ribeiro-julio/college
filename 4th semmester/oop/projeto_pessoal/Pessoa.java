@@ -1,5 +1,3 @@
-// Julio Cesar Garcia Ribeiro - RA: 1994484
-
 public abstract class Pessoa {
     private String nome;
     
