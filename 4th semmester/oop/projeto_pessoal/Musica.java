@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+// Julio Cesar Garcia Ribeiro - RA: 1994484
 
 public class Musica {
     private String nome;
@@ -13,33 +11,16 @@ public class Musica {
         return duracao;
     }
     
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String nome) throws StringsException {
+        if(nome.isEmpty())
+            throw new StringsException();
+        else
+            this.nome = nome;
     }
-    public void setDuracao(int duracao) {
-        this.duracao = duracao;
-    }
-    
-    public void cadastrarMusica() {
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
-        
-        System.out.println("Cadastrando uma música...");
-        
-        System.out.println("Digite o nome da música: ");
-        try {
-            this.setNome(br.readLine());
-        } catch(IOException ioe) {
-            System.out.println("Erro de entrada");
-        }
-        
-        System.out.println("Digite a duração da música (em segundos): ");
-        try {
-            this.setDuracao(Integer.parseInt(br.readLine()));
-        } catch(IOException ioe) {
-            System.out.println("Erro de entrada");
-        } catch(NumberFormatException nfe) {
-            duracao = 0;
-        }
+    public void setDuracao(int duracao) throws NumsException {
+        if(duracao > 0)
+            this.duracao = duracao;
+        else
+            throw new NumsException();
     }
 }

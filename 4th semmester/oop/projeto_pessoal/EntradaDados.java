@@ -28,10 +28,10 @@ public class EntradaDados {
             return Integer.parseInt(br.readLine());
         } catch(IOException ioe) {
             System.out.println("Erro de entrada");
-            return -99;
+            return -1;
         } catch(NumberFormatException nfe) {
             System.out.println("Entrada deve ser um número inteiro (definido -1)");
-            return -99;
+            return -1;
         }
     }
 }

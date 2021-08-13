@@ -100,7 +100,7 @@ public class StringsException extends Exception {
     }
     public Usuario corrigirAdmUsuario(Usuario usuario) {
         try {
-            usuario.setAdm(input.entraString("Digite a senha para o usuário: "));
+            usuario.setAdm(input.entraString("É administrador? (false = não), (true = sim): "));
         } catch(StringsException sve) {
             sve.avisoAdm();
             usuario = sve.corrigirAdmUsuario(usuario);

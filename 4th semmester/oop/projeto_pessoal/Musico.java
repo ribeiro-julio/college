@@ -1,6 +1,4 @@
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.IOException;
+// Julio Cesar Garcia Ribeiro - RA: 1994484
 
 public class Musico extends Pessoa {
     private String funcao;
@@ -9,28 +7,10 @@ public class Musico extends Pessoa {
         return funcao;
     }
     
-    public void setFuncao(String funcao) {
-        this.funcao = funcao;
-    }
-    
-    public void cadastrar() {
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
-        
-        System.out.println("Cadastrando um musico...");
-        
-        System.out.println("Digite o nome do musico: ");
-        try {
-            this.setNome(br.readLine());
-        } catch(IOException ioe) {
-            System.out.println("Erro de entrada");
-        }
-        
-        System.out.println("Digite a função do musico: ");
-        try {
-            this.setFuncao(br.readLine());
-        } catch(IOException ioe) {
-            System.out.println("Erro de entrada");
-        }
+    public void setFuncao(String funcao) throws StringsException {
+        if(funcao.isEmpty())
+            throw new StringsException();
+        else
+            this.funcao = funcao;
     }
 }

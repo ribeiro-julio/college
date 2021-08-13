@@ -4,21 +4,24 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class BancoDePlaylists implements BancoDeDados {
+public class BancoDePlaylists {
     private List<Playlist> playlists = new ArrayList<>();
     
-    @Override
     public List<Playlist> getAll() {
         return playlists;
     }
     
-    @Override
-    public void cadastrar() {
+    public void gerar(Sessao sessao, List<Musica> musicas) {
         EntradaDados input = new EntradaDados();
         
         Playlist playlist = new Playlist();
         
         System.out.println("Cadastrando uma playlist...");
+        
+        if(musicas.isEmpty()) {
+            System.out.println("Não foi possível gerar a playlist -> Nenhuma música cadastrada");
+            return;
+        }
         
         try {
             playlist.setNome(input.entraString("Digite o nome da playlist: "));
@@ -27,27 +30,24 @@ public class BancoDePlaylists implements BancoDeDados {
             playlist = sve.corrigirNomePlaylist(playlist);
         }
         
-        playlists.add(playlist);
-    }
-    
-    void adcMusicasAleatorias(Playlist playlist, List<Musica> musicas, Sessao sessao) {
-        EntradaDados input = new EntradaDados();
-        
         playlist.setUsuario(sessao.getUsuarioLogado());
         
-        List<Musica> musicas_toadd = playlist.getMusicas();
+        List<Musica> musicas_toadd = new ArrayList<>();
+        int duracao = 0;
         
         try {
-            int quantidade = input.entraInt("Digite a quantidade de musicas: ");
-            playlist.setQuantidadeMusicas(quantidade + playlist.getQuantidadeMusicas());
-            if(playlist.getQuantidadeMusicas() > musicas.size())
+            playlist.setQuantidadeMusicas(input.entraInt("Digite a quantidade de musicas: "));
+            if(playlist.getQuantidadeMusicas() > musicas.size()) {
+                System.out.println("Quantidade de músicas ultrapassa o número de músicas cadastradas -> Definido a quantidade de músicas cadastrada");
                 playlist.setQuantidadeMusicas(musicas.size());
+            }
         } catch(NumsException ne) {
             ne.avisoMaiorZero();
             playlist = ne.corrigirQuantidadeMusicas(playlist);
         }
         
         System.out.println("Adicionando músicas aleatórias da coleção...");
+        
         if(playlist.getQuantidadeMusicas() == musicas.size())
             playlist.setMusicas(musicas);
         else {
@@ -57,28 +57,32 @@ public class BancoDePlaylists implements BancoDeDados {
                 int index = rand.nextInt(musicas.size());
                 if(!musicas_toadd.contains(musicas.get(index))) {
                     musicas_toadd.add(musicas.get(index));
-                    playlist.setDuracao(playlist.getDuracao() + playlist.getMusicas().get(i).getDuracao());
+                    duracao += musicas.get(index).getDuracao();
                     i++;
                 }
             }
+            playlist.setDuracao(duracao);
             playlist.setMusicas(musicas_toadd);
         }
+        
+        playlists.add(playlist);
     }
     
-    public void mostrar(Usuario logado) {
+    public void mostrar(Sessao sessao) {
         System.out.println("Playlists geradas por esse usuário:");
+        
+        boolean achou = false;
         for(Playlist playlist : getAll()) {
-            if(playlist.GetUsuario() != null && playlist.GetUsuario().getEmail().equals(logado.getEmail())) {
-                System.out.println("\n" + playlist.getNome() + " - Duração: " + playlist.getDuracao() + "s");
+            if(playlist.GetUsuario().getEmail().equals(sessao.getUsuarioLogado().getEmail())) {
+                achou  = true;
+                System.out.println("\n" + playlist.getNome());
                 System.out.println("Musicas:");
-                if(playlist.getMusicas() == null)
-                    System.out.println("   Essa playlist não tem nenhuma música cadastrada");
-                else {
-                    for(Musica musica : playlist.getMusicas()) {
-                        System.out.println("   " + musica.getNome());
-                    }
-                }
+                for(Musica musica : playlist.getMusicas())
+                    System.out.println("   " + musica.getNome());
             }
         }
+        
+        if(!achou)
+            System.out.println("Nenhuma playlist cadastrada pelo usuário " + sessao.getUsuarioLogado().getNome());
     }
 }

@@ -36,9 +36,16 @@ public class BancoDeMusicos implements BancoDeDados {
         musicos.add(musico);
     }
     
+    @Override
     public void mostrar() {
         System.out.println("Musicos cadastrados:");
-            for(Musico musico : getAll())
-                System.out.println("- " + musico.getNome() + ": " + musico.getFuncao());
+        
+        if(getAll().isEmpty()) {
+            System.out.println("Nenhum musico cadastrado");
+            return;
+        }
+        
+        for(Musico musico : getAll())
+            System.out.println("- " + musico.getNome() + ": " + musico.getFuncao());
     }
 }

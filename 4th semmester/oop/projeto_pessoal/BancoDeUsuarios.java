@@ -3,15 +3,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class BancoDeUsuarios implements BancoDeDados {
+public class BancoDeUsuarios {
     private List<Usuario> usuarios = new ArrayList<>();
     
-    @Override
-    public List<Usuario> getAll() {
-        return usuarios;
-    }
-    
-    @Override
     public void cadastrar() {
         EntradaDados input = new EntradaDados();
         
@@ -50,13 +44,13 @@ public class BancoDeUsuarios implements BancoDeDados {
         usuarios.add(usuario);
     }
     
-    public Usuario noSistema(String email, String senha) {
-        if(getAll().isEmpty()) {
+    public Usuario cadastrado(String email, String senha) {
+        if(usuarios.isEmpty()) {
             System.out.println("Nenhum usuário cadastrado no sistema");
             return null;
         }
         
-        for(Usuario usuario : getAll()) {
+        for(Usuario usuario : usuarios) {
             if(usuario.getEmail().equals(email) && usuario.getSenha().equals(senha))
                 return usuario;
         }

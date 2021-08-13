@@ -1,17 +1,13 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Random;
+// Julio Cesar Garcia Ribeiro - RA: 1994484
+
+import java.util.List;
 
 public class Playlist {
     private String nome;
     private int duracao;
-    private Musica musicas[];
+    int quantidadeMusicas;
+    private List<Musica> musicas;
     private Usuario usuario;
-    
-    public Playlist() {
-        musicas = new Musica[3];
-    }
     
     public String getNome() {
         return nome;
@@ -19,49 +15,35 @@ public class Playlist {
     public int getDuracao() {
         return duracao;
     }
-    public Musica[] getMusicas() {
+    public int getQuantidadeMusicas() {
+        return quantidadeMusicas;
+    }
+    public List<Musica> getMusicas() {
         return musicas;
     }
     public Usuario GetUsuario() {
         return usuario;
     }
     
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String nome) throws StringsException {
+        if(nome.isEmpty())
+            throw new StringsException();
+        else
+            this.nome = nome;
     }
     public void setDuracao(int duracao) {
         this.duracao = duracao;
     }
-    public void setMusicas(Musica musicas[]) {
+    public void setQuantidadeMusicas(int quantidadeMusicas) throws NumsException {
+        if(quantidadeMusicas > 0)
+            this.quantidadeMusicas = quantidadeMusicas;
+        else
+            throw new NumsException();
+    }
+    public void setMusicas(List<Musica> musicas) {
         this.musicas = musicas;
     }
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-    
-    public void gerarPlaylist(Musica musicas[], Usuario usuario) {
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
-        
-        System.out.println("Gerando uma playlist...");
-        
-        System.out.println("Digite o nome da playlist: ");
-        try {
-            this.setNome(br.readLine());
-        } catch(IOException ioe) {
-            System.out.println("Erro de entrada");
-        }
-        
-        System.out.println("Adicionando músicas aleatórias da coleção...");
-        Random rand = new Random();
-        int index = 0;
-        while(index < 3) {
-            int i = rand.nextInt(5);
-            if(musicas[i] != null) {
-                this.musicas[index] = musicas[i];
-                this.setDuracao(this.getDuracao() + musicas[i].getDuracao());
-            }
-            index++;
-        }        
     }
 }

@@ -1,272 +1,200 @@
-import java.io.InputStreamReader; 
-import java.io.BufferedReader;
-import java.io.IOException;
+// Julio Cesar Garcia Ribeiro - RA: 1994484
 
 public class Programa {
+    
+    private static EntradaDados input = new EntradaDados();
+    private static BancoDeBandas bb = new BancoDeBandas();
+    private static BancoDeMusicas bma = new BancoDeMusicas();
+    private static BancoDeMusicos bmo = new BancoDeMusicos();
+    private static BancoDePlaylists bp = new BancoDePlaylists();
+    private static BancoDeUsuarios bu = new BancoDeUsuarios();
+    private static Sessao sessao = new Sessao();
+    
     public static void main(String[] args) {
-        Usuario usuarios[] = new Usuario[2];
-        Musico musicos[] = new Musico[5];
-        Banda bandas[] = new Banda[2];
-        Musica musicas[] = new Musica[5];
-        Playlist playlists[] = new Playlist[2];
-        
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
-        
-        Usuario usuario = new Usuario();
-        usuario.setNome("Adm");
-        usuario.setEmail("adm@adm.com");
-        usuario.setSenha("adm");
-        usuario.setAdm(true);
-        usuarios[0] = usuario;
-        
-        usuario = new Usuario();
-        usuario.setNome("Nao Adm");
-        usuario.setEmail("naoadm@naoadm.com");
-        usuario.setSenha("naoadm");
-        usuario.setAdm(false);
-        usuarios[1] = usuario;
-        
-        String email = "", senha = "";
-        System.out.println("Digite seu email: ");
-        try {
-            email = br.readLine();
-        } catch (IOException ioe) {
-            System.out.println("Erro de entrada");
-        }
-        System.out.println("Digite sua senha: ");
-        try {
-            senha = br.readLine();
-        } catch (IOException ioe) {
-            System.out.println("Erro de entrada");
-        }
-        
-        System.out.println("-----------------------------------");
-        
-        int usuarioCadastrado = usuario.noSistema(usuarios, email, senha);
-        
-        if(usuarioCadastrado != -1) {
-            if(usuarios[usuarioCadastrado].getAdm() == true) {
-                int opcao = 0;
+        while(true) {
+            System.out.println("Gerador de Playlists com Músicas Aleatórias");
+            System.out.println("Tela Inicial");
+            System.out.println("Selecione uma opcao (0 a 2):");
+            System.out.println("1 - Entrar");
+            System.out.println("2 - Cadastrar Usuário");
+            System.out.println("0 - Sair");
+            int opcao = input.entraInt(null);
+            
+            switch(opcao) {
+                case 0:
+                    System.exit(0);
+                break;
                 
-                do {
-                    System.out.println("Opcoes:");
-                    System.out.println("1 - Cadastrar musico");
-                    System.out.println("2 - Cadastrar musica");
-                    System.out.println("3 - Cadastrar banda");
-                    System.out.println("4 - Gerar playlist");
-                    System.out.println("0 - Sair");
-                    
-                    try {
-                        opcao = Integer.parseInt(br.readLine());
-                    } catch (IOException ioe) {
-                        System.out.println("Erro de entrada");
-                    } catch(NumberFormatException nfe) {
-                        opcao = -1;
-                    }
-                    if(opcao < 0 || opcao > 4) {
-                        System.out.println("Opcao inválida");
-                    }
-                    
-                    System.out.println("-----------------------------------");
-                    
-                    switch(opcao) {
-                        case 1:
-                            Musico musico = new Musico();
-                            musico.cadastrar();
-                            for(int i = 0; i < 5; i++) {
-                                if(musicos[i] == null) {
-                                    musicos[i] = musico;
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            
-                            System.out.println("Musicos cadastrados:\n");
-                            for(int i = 0; i < 5; i++) {
-                                if(musicos[i] != null) {
-                                    System.out.println(musicos[i].getNome() + ": " + musicos[i].getFuncao() + "\n");
-                                } else {
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            break;
-                            
-                        case 2:
-                            Musica musica = new Musica();
-                            musica.cadastrarMusica();
-                            for(int i = 0; i < 5; i++) {
-                                if(musicas[i] == null) {
-                                    musicas[i] = musica;
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            
-                            System.out.println("Musicas cadastrados:\n");
-                            for(int i = 0; i < 5; i++) {
-                                if(musicas[i] != null) {
-                                    System.out.println(musicas[i].getNome() + " - Duração: " + musicas[i].getDuracao() + "s\n");
-                                } else {
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            break;
-                        
-                        case 3:
-                            Banda banda = new Banda();
-                            banda.cadastrarBanda(musicos, musicas);
-                            for(int i = 0; i < 5; i++) {
-                                if(bandas[i] == null) {
-                                    bandas[i] = banda;
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            
-                            System.out.println("Bandas cadastrados:\n");
-                            for(int i = 0; i < 2; i++) {
-                                if(bandas[i] != null) {
-                                    System.out.println(bandas[i].getNome() + " - " + bandas[i].getGenero());
-                                    System.out.println("Integrantes:");
-                                    for(int j = 0; j < bandas[i].getMusicos().length; j++) {
-                                        if(bandas[i].getMusicos()[j] != null) {
-                                            System.out.println("   " + bandas[i].getMusicos()[j].getNome() + ": " + bandas[i].getMusicos()[j].getFuncao());
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                    System.out.println("Musicas:");
-                                    for(int j = 0; j < bandas[i].getMusicas().length; j++) {
-                                        if(bandas[i].getMusicas()[j] != null) {
-                                            System.out.println("   " + bandas[i].getMusicas()[j].getNome() + "\n");
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                } else {
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            break;
-                        
-                        case 4:
-                            Playlist playlist = new Playlist();
-                            playlist.gerarPlaylist(musicas, usuarios[usuarioCadastrado]);
-                            for(int i = 0; i < 2; i++) {
-                                if(playlists[i] == null) {
-                                    playlists[i] = playlist;
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            
-                            System.out.println("Playlists geradas:\n");
-                            for(int i = 0; i < 2; i++) {
-                                if(playlists[i] != null) {
-                                    System.out.println(playlists[i].getNome() + " - Duração: " + playlists[i].getDuracao() + "s");
-                                    System.out.println("Musicas:");
-                                    for(int j = 0; j < playlists[i].getMusicas().length; j++) {
-                                        if(playlists[i].getMusicas()[j] != null) {
-                                            System.out.println("   " + playlists[i].getMusicas()[j].getNome());
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            break;
-                    }
-                    
-                } while(opcao != 0);
-            } else {
-                int opcao = 0;
-
-                do {
-                    System.out.println("Opcoes:");
-                    System.out.println("1 - Gerar playlist");
-                    System.out.println("0 - Sair");
-
-                    try {
-                        opcao = Integer.parseInt(br.readLine());
-                    } catch (IOException ioe) {
-                        System.out.println("Erro de entrada");
-                    } catch(NumberFormatException nfe) {
-                        opcao = -1;
-                    }
-                    if(opcao < 0 || opcao > 1) {
-                        System.out.println("Opcao inválida");
-                    }
-                    
-                    // Populando musicas já que o nao adm nao pode cadastrar musicas
-                    Musica musica = new Musica();
-                    musica.setNome("Musica 1");
-                    musica.setDuracao(100);
-                    musicas[0] = musica;
-                    musica = new Musica();
-                    musica.setNome("Musica 2");
-                    musica.setDuracao(10);
-                    musicas[1] = musica;
-                    musica = new Musica();
-                    musica.setNome("Musica 3");
-                    musica.setDuracao(20);
-                    musicas[2] = musica;
-                    musica = new Musica();
-                    musica.setNome("Musica 4");
-                    musica.setDuracao(50);
-                    musicas[3] = musica;
-                    musica.setNome("Musica 5");
-                    musica.setDuracao(110);
-                    musicas[4] = musica;
-
-                    switch(opcao){
-                        case 1:
-                            Playlist playlist = new Playlist();
-                            playlist.gerarPlaylist(musicas, usuarios[usuarioCadastrado]);
-                            for(int i = 0; i < 2; i++) {
-                                if(playlists[i] == null) {
-                                    playlists[i] = playlist;
-                                    break;
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            
-                            System.out.println("Playlists geradas:\n");
-                            for(int i = 0; i < 2; i++) {
-                                if(playlists[i] != null) {
-                                    System.out.println(playlists[i].getNome() + " - Duração: " + playlists[i].getDuracao() + "s");
-                                    System.out.println("Musicas:");
-                                    for(int j = 0; j < playlists[i].getMusicas().length; j++) {
-                                        if(playlists[i].getMusicas()[j] != null) {
-                                            System.out.println("   " + playlists[i].getMusicas()[j].getNome());
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            System.out.println("-----------------------------------");
-                            break;
-                    }
-
-                } while(opcao != 0);
+                case 1:
+                    System.out.println("\n----------------------------------------\n");
+                    String email = input.entraString("Digite o e-mail: ");
+                    String senha = input.entraString("Digite a senha: ");
+                    sessao.setUsuarioLogado(bu.cadastrado(email, senha));
+                    if(sessao.getUsuarioLogado() != null) {
+                        if(sessao.getUsuarioLogado().getAdm()) {
+                            System.out.println("\n----------------------------------------\n");
+                            telaAdm();
+                        }
+                        else {
+                            System.out.println("\n----------------------------------------\n");
+                            telaNaoAdm();
+                        }
+                    } else
+                        System.out.println("Usuário não encontrado");
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 2:
+                    System.out.println("\n----------------------------------------\n");
+                    bu.cadastrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                default:
+                    System.out.println("\n----------------------------------------\n");
+                    System.out.println("Opcao inválida");
+                    System.out.println("\n----------------------------------------\n");
             }
-        } else {
-            System.out.println("Acesso negado");
+        }
+    }
+    
+    static void telaAdm() {
+        while(true) {
+            System.out.println("Tela do Administrador");
+            System.out.println("Selecione uma opcao (0 a 10):");
+            System.out.println("1 - Cadastrar musico");
+            System.out.println("2 - Mostrar musicos cadastrados");
+            System.out.println("3 - Cadastrar musica");
+            System.out.println("4 - Mostrar musicas cadastradas");
+            System.out.println("5 - Cadastrar banda");
+            System.out.println("6 - Selecionar músicos da banda");
+            System.out.println("7 - Selecionar músicas da banda");
+            System.out.println("8 - Mostrar bandas cadastradas");
+            System.out.println("9 - Gerar playlist");
+            System.out.println("10 - Mostrar playlist que eu cadastrei");
+            System.out.println("0 - Deslogar");
+            int opcao = input.entraInt(null);
+            
+            switch(opcao) {
+                case 0:
+                    System.out.println("\n----------------------------------------\n");
+                    return;
+                    
+                case 1:
+                    System.out.println("\n----------------------------------------\n");
+                    bmo.cadastrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 2:
+                    System.out.println("\n----------------------------------------\n");
+                    bmo.mostrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 3:
+                    System.out.println("\n----------------------------------------\n");
+                    bma.cadastrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 4:
+                    System.out.println("\n----------------------------------------\n");
+                    bma.mostrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 5:
+                    System.out.println("\n----------------------------------------\n");
+                    bb.cadastrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 6:
+                    System.out.println("\n----------------------------------------\n");
+                    bb.selMusicos(bmo.getAll());
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 7:
+                    System.out.println("\n----------------------------------------\n");
+                    bb.selMusicas(bma.getAll());
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 8:
+                    System.out.println("\n----------------------------------------\n");
+                    bb.mostrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 9:
+                    System.out.println("\n----------------------------------------\n");
+                    bp.gerar(sessao, bma.getAll());
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 10:
+                    System.out.println("\n----------------------------------------\n");
+                    bp.mostrar(sessao);
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                default:
+                    System.out.println("Opção inválida");
+            }
+        }
+    }
+    
+    static void telaNaoAdm() {
+        while(true) {
+            System.out.println("Tela do Usuário");
+            System.out.println("Selecione uma opcao (0 a 5):");
+            System.out.println("1 - Mostrar musicos cadastrados");
+            System.out.println("2 - Mostrar musicas cadastradas");
+            System.out.println("3 - Mostrar bandas cadastradas");
+            System.out.println("4 - Gerar playlist");
+            System.out.println("5 - Mostrar playlist que eu cadastrei");
+            System.out.println("0 - Deslogar");
+            int opcao = input.entraInt(null);
+            
+            switch(opcao) {
+                case 0:
+                    return;
+                
+                case 1:
+                    System.out.println("\n----------------------------------------\n");
+                    bmo.mostrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 2:
+                    System.out.println("\n----------------------------------------\n");
+                    bma.mostrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 3:
+                    System.out.println("\n----------------------------------------\n");
+                    bb.mostrar();
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 4:
+                    System.out.println("\n----------------------------------------\n");
+                    bp.gerar(sessao, bma.getAll());
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                case 5:
+                    System.out.println("\n----------------------------------------\n");
+                    bp.mostrar(sessao);
+                    System.out.println("\n----------------------------------------\n");
+                break;
+                
+                default:
+                    System.out.println("Opção inválida");
+            }
         }
     }
 }

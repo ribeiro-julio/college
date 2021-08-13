@@ -13,8 +13,6 @@ public class BancoDeBandas implements BancoDeDados {
     
     @Override
     public void cadastrar() {
-        BancoDeMusicas bma = new BancoDeMusicas();
-                
         EntradaDados input = new EntradaDados();
         
         Banda banda = new Banda();
@@ -38,68 +36,104 @@ public class BancoDeBandas implements BancoDeDados {
         bandas.add(banda);
     }
     
+    @Override
     public void mostrar() {
         System.out.println("Bandas cadastrados:");
+        
+        if(getAll().isEmpty()) {
+            System.out.println("Nenhuma banda cadastrado");
+            return;
+        }
+        
         for(Banda banda : getAll()) {
-            System.out.println("- " + banda.getNome() + " - " + banda.getGenero());
+            System.out.println(banda.getNome() + ": Gênero: " + banda.getGenero());
             System.out.println("Integrantes:");
             if(banda.getMusicos() == null)
                 System.out.println("   Essa banda não tem nenhum integrande cadastrado");
             else {
                 for(Musico musico : banda.getMusicos())
-                    System.out.println("   " + musico.getNome() + ": " + musico.getFuncao());
+                    System.out.println("   - " + musico.getNome() + ": " + musico.getFuncao());
             }
             System.out.println("Musicas:");
             if(banda.getMusicas() == null)
                 System.out.println("   Essa banda não tem nenhuma música cadastrada");
             else {
                 for(Musica musica : banda.getMusicas())
-                    System.out.println("   " + musica.getNome());
+                    System.out.println("   - " + musica.getNome());
             }
         }
     }
     
-    public void adcMusicos(Banda banda, List<Musico> musicos) {
+    public void selMusicos(List<Musico> musicos) {
         EntradaDados input = new EntradaDados();
         
-        System.out.println("Selecione os musicos para incluir na banda (-1 para parar):");
-        int i = 0;
-        for(Musico musico : musicos) {    // Mostra os musicos cadastrados
-            System.out.println(i + " - " + musico.getNome() + ": " + musico.getFuncao());
-            i++;
-        }
-        List<Musico> musicos_toadd = new ArrayList<>();   // Cria uma lista temporária para armazenar os músicos
-        int index = 0;
-        while(index != -1) {
-            index = input.entraInt(null);
-            if(index >= 0 && index < musicos.size()) {
-                musicos_toadd.add(musicos.get(index));
-            } else {
-                index = -1;
+        mostrar();
+        String nome = input.entraString("Digite o nome da banda que deseja selecionar integrantes: ");
+        
+        for(int i = 0; i < getAll().size(); i++) {
+            if(getAll().get(i).getNome().equals(nome)) {
+                System.out.println("Selecione os musicos para incluir na banda (-1 para parar):");
+        
+                if(musicos.isEmpty()) {
+                    System.out.println("Erro ao adicionar músicos -> Nenhum músico cadastrado");
+                    return;
+                }
+
+                int j = 0;
+                for(Musico musico : musicos) {    // Mostra os musicos cadastrados
+                    System.out.println(j + ": " + musico.getNome() + ": " + musico.getFuncao());
+                    j++;
+                }
+                List<Musico> musicos_toadd = new ArrayList<>();   // Cria uma lista temporária para armazenar os músicos
+                int index = 0;
+                while(index != -1) {
+                    index = input.entraInt(null);
+                    if(index >= 0 && index < musicos.size()) {
+                        musicos_toadd.add(musicos.get(index));
+                    } else {
+                        index = -1;
+                    }
+                }
+                getAll().get(i).setMusicos(musicos_toadd);
+                return;
             }
         }
-        banda.setMusicos(musicos_toadd);
+        
+        System.out.println("Banda não encontrada");
     }
     
-    public void selMusicas(Banda banda, List<Musica> musicas) {
+    public void selMusicas(List<Musica> musicas) {
         EntradaDados input = new EntradaDados();
         
-        System.out.println("Selecione as musicas dessa banda (-1 para parar):");
-        int i = 0;
-        for(Musica musica : musicas) {    // Mostra os musicos cadastrados
-            System.out.println(i + " - " + musica.getNome() + " - Duração: " + musica.getDuracao());
-            i++;
-        }
-        List<Musica> musicas_toadd = new ArrayList<>();   // Cria uma lista temporária para armazenar os músicos
-        int index = 0;
-        while(index != -1) {
-            index = input.entraInt(null);
-            if(index >= 0 && index < musicas.size()) {
-                musicas_toadd.add(musicas.get(index));
-            } else {
-                index = -1;
+        mostrar();
+        String nome = input.entraString("Digite o nome da banda que deseja selecionar integrantes: ");
+        
+        for(int i = 0; i < getAll().size(); i++) {
+            if(getAll().get(i).getNome().equals(nome)) {
+                System.out.println("Selecione as musicas dessa banda (-1 para parar):");
+        
+                if(musicas.isEmpty()) {
+                    System.out.println("Erro ao selecionar músicas -> Nenhuma musica cadastrada");
+                    return;
+                }
+
+                int j = 0;
+                for(Musica musica : musicas) {    // Mostra os musicos cadastrados
+                    System.out.println(j + ": " + musica.getNome());
+                    j++;
+                }
+                List<Musica> musicas_toadd = new ArrayList<>();   // Cria uma lista temporária para armazenar os músicos
+                int index = 0;
+                while(index != -1) {
+                    index = input.entraInt(null);
+                    if(index >= 0 && index < musicas.size()) {
+                        musicas_toadd.add(musicas.get(index));
+                    } else {
+                        index = -1;
+                    }
+                }
+                getAll().get(i).setMusicas(musicas_toadd);
             }
         }
-        banda.setMusicas(musicas_toadd);
     }
 }

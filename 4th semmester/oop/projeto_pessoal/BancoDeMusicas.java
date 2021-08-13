@@ -36,9 +36,16 @@ public class BancoDeMusicas implements BancoDeDados{
         musicas.add(musica);
     }
     
+    @Override
     public void mostrar() {
-        System.out.println("Musicas cadastrados:");
-            for(Musica musica : getAll())
-                System.out.println("- " + musica.getNome() + " - Duração: " + musica.getDuracao());
+        System.out.println("Músicas cadastrados:");
+        
+        if(getAll().isEmpty()) {
+            System.out.println("Nenhuma música cadastrada");
+            return;
+        }
+        
+        for(Musica musica : getAll())
+            System.out.println("- " + musica.getNome() + " - Duração: " + musica.getDuracao());
     }
 }
