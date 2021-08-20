@@ -70,7 +70,7 @@ void destroy(AVLNodePtr *node) {
     }
 }
 
-int AVLHeight(AVLNodePtr node) {
+int AVLHeight(AVLNodePtr node) {    // Maior caminho nó para folha
     if(node == NULL)
         return 0;
     else
@@ -206,6 +206,81 @@ bool insert(AVLNodePtr *node, int x) {
     return true;
 }
 
+AVLNodePtr getMaxAux(AVLNodePtr *node) {
+    AVLNodePtr ret;
+
+    if((*node)->right == NULL) {
+        ret = (*node);
+        (*node) = (*node)->left;
+        return ret;
+    }
+
+    return getMaxAux(&(*node)->right);
+}
+
+int AVLDepth(AVLNodePtr *node) {    // Nó para raiz
+    if ((*node) == NULL)
+        return 0;
+
+    else {
+        int rd = AVLDepth(&(*node)->right);
+        int ld = AVLDepth(&(*node)->left);
+    
+        if (ld > rd)
+            return(ld + 1);
+        else
+            return(rd + 1);
+    }
+}
+
+bool removeNode(AVLNodePtr *node, int x) {
+    if((*node) == NULL) {       // Nao encontrou
+        printf("Erro ao remover -> chave nao encontrada\n");
+        return false;
+    }
+
+    if((*node)->x == x) {   // Encontrou o elemento a remover
+        AVLNodePtr aux = (*node);
+
+        if((*node)->right == NULL && (*node)->left == NULL)     // Folha
+            (*node) = NULL;
+        
+        else if((*node)->right != NULL && (*node)->left == NULL)    // Apenas subarvore direita
+            (*node) = (*node)->right;
+
+        else if((*node)->right == NULL && (*node)->left != NULL)    // Apenas subarvore esquerda
+            (*node) = (*node)->left;
+        
+        else {      // 2 subarvores
+            aux = getMaxAux(&(*node)->left);     // Pega o maior elemento da subarvore esquerda
+            //printf("%d ", aux->x);
+            (*node)->x = aux->x;
+        }
+
+        free(aux);
+        return true;
+    }
+    
+    bool removed;
+    if(x > (*node)->x)      // Busca recursiva do elemento a remover
+        removed = removeNode(&(*node)->right, x);
+    else
+        removed = removeNode(&(*node)->left, x);
+    
+    if(removed == false)
+        return false;
+    
+    int rd = AVLDepth(&(*node)->right);
+    int ld = AVLDepth(&(*node)->left);
+
+    if((ld - rd) == 2 || (ld - rd) == -2)   // Se desbalanceou a arvore faz rebalanceamento
+        applyRotations(&(*node));
+
+    (*node)->height = updateAVLHeight((*node)->left, (*node)->right);
+
+    return true;
+}
+
 
 int main() {
     AVLNodePtr AVLRoot;
@@ -226,6 +301,15 @@ int main() {
     insert(&AVLRoot, 100);
     insert(&AVLRoot, 2);
     insert(&AVLRoot, 1);
+
+    printf("PreOrder = { ");
+    preOrder(&AVLRoot);
+    printf("}\n");
+
+    //removeNode(&AVLRoot, 100);
+    //removeNode(&AVLRoot, 80);
+    //removeNode(&AVLRoot, 2);
+    removeNode(&AVLRoot, 12);
 
     printf("PreOrder = { ");
     preOrder(&AVLRoot);
