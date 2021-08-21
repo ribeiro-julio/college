@@ -150,7 +150,7 @@ void applyRotations(AVLNodePtr *node) {
     int lh = AVLHeight((*node)->left);
     int bf = rh - lh;
 
-    if(bf == 2) {   // Rotaciona pra esquerda -> mais elementos na direita
+    if(bf >= 2) {   // Rotaciona pra esquerda -> mais elementos na direita
         AVLNodePtr temp = (*node)->right;
         int temprh = AVLHeight(temp->right);
         int templh = AVLHeight(temp->left);
@@ -160,7 +160,7 @@ void applyRotations(AVLNodePtr *node) {
         else  // rotação dupla
             leftDoubleRotation(&(*node));
 
-    } else {        // Rotaciona pra direita ->  mais elementos na esquerda
+    } else if (bf <= 2) {        // Rotaciona pra direita ->  mais elementos na esquerda
         AVLNodePtr temp = (*node)->left;
         int temprh = AVLHeight(temp->right);
         int templh = AVLHeight(temp->left);
@@ -218,6 +218,18 @@ AVLNodePtr getMaxAux(AVLNodePtr *node) {
     return getMaxAux(&(*node)->right);
 }
 
+AVLNodePtr getMinAux(AVLNodePtr *node) {
+    AVLNodePtr ret;
+
+    if((*node)->left == NULL) {
+        ret = (*node);
+        (*node) = (*node)->right;
+        return ret;
+    }
+
+    return getMinAux(&(*node)->left);
+}
+
 int AVLDepth(AVLNodePtr *node) {    // Nó para raiz
     if ((*node) == NULL)
         return 0;
@@ -253,7 +265,7 @@ bool removeNode(AVLNodePtr *node, int x) {
         
         else {      // 2 subarvores
             aux = getMaxAux(&(*node)->left);     // Pega o maior elemento da subarvore esquerda
-            //printf("%d ", aux->x);
+            //aux = getMinAux(&(*node)->right);   // Pega o menor elemento da subarvore direita
             (*node)->x = aux->x;
         }
 
@@ -306,9 +318,19 @@ int main() {
     preOrder(&AVLRoot);
     printf("}\n");
 
-    //removeNode(&AVLRoot, 100);
-    //removeNode(&AVLRoot, 80);
-    //removeNode(&AVLRoot, 2);
+    printf("PostOrder = { ");
+    postOrder(&AVLRoot);
+    printf("}\n");
+
+    printf("InOrder = { ");
+    inOrder(&AVLRoot);
+    printf("}\n");
+
+    removeNode(&AVLRoot, 100);
+    removeNode(&AVLRoot, 80);
+    removeNode(&AVLRoot, 2);
+    removeNode(&AVLRoot, 7);
+    removeNode(&AVLRoot, 78);
     removeNode(&AVLRoot, 12);
 
     printf("PreOrder = { ");
