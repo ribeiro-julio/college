@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+
 typedef struct StackNode *StackNodePtr;
 
 typedef struct StackNode {
@@ -16,7 +17,7 @@ typedef struct {
 
 
 void destroy(DynamicStack *stack) {
-    printf("Destruindo a pilha\n");
+    printf("Destroying stack...\n");
     StackNodePtr aux;
     while(stack->top != NULL) {
         aux = stack->top;
@@ -37,7 +38,7 @@ bool isEmpty(DynamicStack *stack) {
 
 int onTop(DynamicStack *stack) {
     if(isEmpty(stack)) {
-        printf("Nenhum elemento no topo -> pilha vazia\n");
+        printf("Empty Stack\n");
         return -99;
     }
 
@@ -54,7 +55,7 @@ int pop(DynamicStack *stack) {
         free(aux);
         stack->size--;
     } else
-        printf("Nao e possivel excluir -> pilha esta vazia\n");
+        printf("Pop Error -> Empty stack\n");
 
     return ret;
 }

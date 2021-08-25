@@ -87,7 +87,9 @@ int updateAVLHeight(AVLNodePtr left, AVLNodePtr right) {
         return (rh + 1);
 }
 
-void rightSimpleRotation(AVLNodePtr *p) {
+void rightSingleRotation(AVLNodePtr *p) {
+    printf("Applying Right Single Rotation...\n");
+
     AVLNodePtr u = (*p)->left;
 
     (*p)->left = u->right;
@@ -100,7 +102,9 @@ void rightSimpleRotation(AVLNodePtr *p) {
     (*p) = u;
 }
 
-void leftSimpleRotation(AVLNodePtr *p) {
+void leftSingleRotation(AVLNodePtr *p) {
+    printf("Applying Left Single Rotation...\n");
+
     AVLNodePtr u = (*p)->right;
 
     (*p)->right = u->left;
@@ -114,6 +118,8 @@ void leftSimpleRotation(AVLNodePtr *p) {
 }
 
 void rightDoubleRotation(AVLNodePtr *p) {
+    printf("Applying Right Double Rotation...\n");
+
     AVLNodePtr u = (*p)->left;
     AVLNodePtr v = u->right;
 
@@ -130,6 +136,8 @@ void rightDoubleRotation(AVLNodePtr *p) {
 }
 
 void leftDoubleRotation(AVLNodePtr *p) {
+    printf("Applying Left Double Rotation...\n");
+
     AVLNodePtr u = (*p)->right;
     AVLNodePtr v = u->left;
 
@@ -156,7 +164,7 @@ void applyRotations(AVLNodePtr *node) {
         int templh = AVLHeight(temp->left);
 
         if(temprh >= templh)  // Rotacao simples
-            leftSimpleRotation(&(*node));
+            leftSingleRotation(&(*node));
         else  // rotação dupla
             leftDoubleRotation(&(*node));
 
@@ -166,7 +174,7 @@ void applyRotations(AVLNodePtr *node) {
         int templh = AVLHeight(temp->left);
 
         if(templh >= temprh)  // Rotacao simples
-            rightSimpleRotation(&(*node));
+            rightSingleRotation(&(*node));
         else  // rotação dupla
             rightDoubleRotation(&(*node));
     }
@@ -198,8 +206,10 @@ bool insert(AVLNodePtr *node, int x) {
     int rh = AVLHeight((*node)->right);
     int lh = AVLHeight((*node)->left);
 
-    if((rh - lh) == 2 || (rh - lh) == -2)
+    if((rh - lh) == 2 || (rh - lh) == -2) {
+        printf("Tree is unbalanced\n");
         applyRotations(&(*node));
+    }
 
     (*node)->height = updateAVLHeight((*node)->left, (*node)->right);
 
@@ -302,36 +312,23 @@ int main() {
     if(isEmpty(&AVLRoot))
         printf("Arvore vazia\n");
 
-    insert(&AVLRoot, 77);
-    insert(&AVLRoot, 12);
-    insert(&AVLRoot, 10);
-    insert(&AVLRoot, 5);
-    insert(&AVLRoot, 7);
-    insert(&AVLRoot, 80);
-    insert(&AVLRoot, 78);
     insert(&AVLRoot, 90);
+    insert(&AVLRoot, 15);
+    insert(&AVLRoot, 21);
     insert(&AVLRoot, 100);
-    insert(&AVLRoot, 2);
-    insert(&AVLRoot, 1);
+    insert(&AVLRoot, 41);
+    insert(&AVLRoot, 52);
+    insert(&AVLRoot, 40);
+    insert(&AVLRoot, 89);
+    insert(&AVLRoot, 93);
+    insert(&AVLRoot, 64);
 
     printf("PreOrder = { ");
     preOrder(&AVLRoot);
     printf("}\n");
 
-    printf("PostOrder = { ");
-    postOrder(&AVLRoot);
-    printf("}\n");
-
-    printf("InOrder = { ");
-    inOrder(&AVLRoot);
-    printf("}\n");
-
-    removeNode(&AVLRoot, 100);
-    removeNode(&AVLRoot, 80);
-    removeNode(&AVLRoot, 2);
-    removeNode(&AVLRoot, 7);
-    removeNode(&AVLRoot, 78);
-    removeNode(&AVLRoot, 12);
+    removeNode(&AVLRoot, 41);
+    removeNode(&AVLRoot, 40);
 
     printf("PreOrder = { ");
     preOrder(&AVLRoot);
