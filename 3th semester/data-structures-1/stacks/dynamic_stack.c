@@ -38,7 +38,7 @@ bool isEmpty(DynamicStack *stack) {
 
 int onTop(DynamicStack *stack) {
     if(isEmpty(stack)) {
-        printf("Empty Stack\n");
+        printf("No element on top -> Stack is empty\n");
         return -99;
     }
 
@@ -55,7 +55,7 @@ int pop(DynamicStack *stack) {
         free(aux);
         stack->size--;
     } else
-        printf("Pop Error -> Empty stack\n");
+        printf("Pop error -> Stack is empty\n");
 
     return ret;
 }

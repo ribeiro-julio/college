@@ -24,7 +24,7 @@ bool isEmpty(DynamicQueue *queue) {
 }
 
 void destroy(DynamicQueue *queue){
-    printf("Destruindo a pilha\n");
+    printf("Destroying queue...\n");
     QueueNodePtr aux;
     while(queue->start != NULL){
         aux = queue->start;
@@ -38,7 +38,7 @@ void enqueue(DynamicQueue *queue, int x) {
     QueueNodePtr aux;
     aux = (QueueNodePtr)malloc(sizeof(QueueNode));
     aux->x = x;
-    if(isEmpty(queue)) { // Primeira insersão
+    if(isEmpty(queue)) {
         queue->start = aux;
         queue->end = aux;
         aux->next = NULL;
@@ -60,14 +60,14 @@ int dequeue(DynamicQueue *queue){
         free(aux);
         queue->size--;
     } else
-        printf("Nao e possivel remover -> fila vazia\n");
+        printf("Dequeue error -> Queue is empty\n");
 
     return ret;
 }
 
 int first(DynamicQueue *queue){
     if(isEmpty(queue)){
-        printf("Sem primeiro elemento -> Pilha vazia\n");
+        printf("No first element -> Queue is empty\n");
         return -99;
     }
 
@@ -82,7 +82,7 @@ void init(DynamicQueue *queue) {
 
 int last(DynamicQueue *queue){
     if(isEmpty(queue)){
-        printf("Sem ultimo elemento -> Pilha vazia\n");
+        printf("No last element -> Queue is empty\n");
         return -99;
     }
 

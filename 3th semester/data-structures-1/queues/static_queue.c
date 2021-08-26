@@ -25,7 +25,7 @@ void enqueue(StaticQueue *queue, int x) {
         queue->array[queue->end] = x;
         queue->size++;
     } else
-        printf("Nao e possivel inserir -> fila cheia\n");
+        printf("Enqueue error -> Queue is full\n");
 }
 
 int dequeue(StaticQueue *queue){
@@ -36,14 +36,14 @@ int dequeue(StaticQueue *queue){
         queue->start = increaseIndex(queue->start);
         queue->size--;
     } else
-        printf("Nao e possivel remover -> fila vazia\n");
+        printf("Dequeue error -> Queue is empty\n");
 
     return ret;
 }
 
 int first(StaticQueue *queue){
     if(isEmpty(queue)){
-        printf("Sem primeiro elemento -> Pilha vazia\n");
+        printf("No first element -> Queue is empty\n");
         return -99;
     }
     
@@ -62,7 +62,7 @@ void init(StaticQueue *queue) {
 
 int last(StaticQueue *queue){
     if(isEmpty(queue)){
-        printf("Sem utlimo elemento -> Pilha vazia\n");
+        printf("No last element -> Queue is empty\n");
         return -99;
     }
     

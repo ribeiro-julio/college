@@ -58,7 +58,7 @@ bool insert(TreeNodePtr *tree, int x) {     // Função recursiva
     }
 
     if((*tree)->x == x) {       // Elemento ja existe na arvore
-        printf("Erro ao inserir -> chave ja existente\n");
+        printf("Insertion error -> Key already exists\n");
         return false;
     }
 
@@ -85,8 +85,10 @@ void postOrder(TreeNodePtr *tree) {
 }
 
 bool removeNode(TreeNodePtr *tree, int x) {
-    if((*tree) == NULL)
+    if((*tree) == NULL) {
+        printf("Removal error -> Key not found\n");
         return false;
+    }
     
     if((*tree)->x == x) {
         TreeNodePtr aux = (*tree);
@@ -118,8 +120,10 @@ bool removeNode(TreeNodePtr *tree, int x) {
 
 
 bool search(TreeNodePtr *tree, int x) {
-    if((*tree) == NULL)
+    if((*tree) == NULL) {
+        printf("Search warning -> Key not found\n");
         return false;
+    }
 
     if((*tree)->x == x)
         return true;

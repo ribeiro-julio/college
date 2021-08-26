@@ -19,6 +19,7 @@ typedef struct {
 
 
 void destroy(List *list) {
+    printf("Destroying list...\n");
     ListNodePtr aux;
     while(list->start != NULL) {
         aux = list->start;
@@ -30,6 +31,11 @@ void destroy(List *list) {
 }
 
 int first(List *list) {
+    if(isEmpty(list)) {
+        printf("No first element -> List is empty\n");
+        return -99;
+    }
+    
     return list->start->x;
 }
 
@@ -65,6 +71,11 @@ void insert(List *list, int x) {
 }
 
 int last(List *list) {
+    if(isEmpty(list)) {
+        printf("No last element -> List is empty\n");
+        return -99;
+    }
+
     ListNodePtr aux = list->start;
     for(aux = list->start; aux->next != NULL; aux = aux->next);
     return aux->x;
@@ -72,7 +83,7 @@ int last(List *list) {
 
 void printList(List *list) {
     ListNodePtr aux;
-    printf("Lista = { ");
+    printf("List = { ");
     for(aux = list->start; aux != NULL; aux = aux->next) {
         printf("%d ", aux->x);
     }
@@ -82,8 +93,13 @@ void printList(List *list) {
 int removeElement(List *list, int x) {
     int ret = -99;
 
-    if(isEmpty(list) || x < list->start->x)     // Lista vazia ou elemento menor que o primeiro (não contido na lista)
+    if(isEmpty(list)) {
+        printf("Removal error -> List is empty\n");
         return ret;
+    } else if(x < list->start->x) {     // Elemento menor que o primeiro (não contido na lista)
+        printf("Removal error -> Key not found\n");
+        return ret;
+    }
     
     if(x == list->start->x) {   // Tira o primeiro elemento
         ListNodePtr aux = list->start;
@@ -99,7 +115,7 @@ int removeElement(List *list, int x) {
     while(aux->next != NULL && x > aux->next->x)
         aux = aux->next;
     if(aux->next == NULL || x > aux->next->x) {     // Proximo é nulo ou elemento maior que o ultimo (não contido na lista)
-        printf("Elemento nao encontrado na lista\n");
+        printf("Removal error -> Key not found\n");
         return ret;
     } else {
         ListNodePtr toRemove = aux->next;
@@ -112,27 +128,37 @@ int removeElement(List *list, int x) {
 }
 
 bool searchFast(List *list, int x) {
-    if(isEmpty(list))
+    if(isEmpty(list)) {
+        printf("Search Error -> List is empty\n");
         return false;
+    }
 
     ListNodePtr aux = list->start;
     while(aux != NULL && x > aux->x) {
         aux = aux->next;
     }
 
-    if(aux == NULL || aux->x > x)
+    if(aux == NULL || aux->x > x) {
+        printf("Search warning -> Key not found\n");
         return false;
+    }
     else
         return true;
 }
 
 bool searchSlow(List *list, int x) {    // Nao otimizado -> pior caso
+    if(isEmpty(list)) {
+        printf("Search Error -> List is empty\n");
+        return false;
+    }
+
     ListNodePtr aux;
     for(aux = list->start; aux != NULL; aux = aux->next) {
         if(aux->x == x)
             return true;
     }
 
+    printf("Search warning -> Key not found\n");
     return false;
 }
 

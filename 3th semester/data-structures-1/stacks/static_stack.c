@@ -23,7 +23,7 @@ bool isFull(StaticStack *stack) {
 
 int onTop(StaticStack *stack) {
     if(isEmpty(stack)) {
-        printf("Nenhum elemento no topo -> pilha vazia\n");
+        printf("No element on top -> Stack is empty\n");
         return -99;
     }
     
@@ -37,7 +37,7 @@ int pop(StaticStack *stack) {
         ret = stack->array[stack->top - 1];
         stack->top--;
     } else
-        printf("Nao e possivel excluir -> pilha vazia\n");
+        printf("Pop error -> Stack is empty\n");
 
     return ret;
 }
@@ -54,7 +54,7 @@ void push(StaticStack *stack, int x) {
         stack->array[stack->top] = x;
         stack->top++;
     } else
-        printf("Nao e possivel inserir -> pilha cheia\n");
+        printf("Push error -> Stack is full\n");
 }
 
 int size(StaticStack *stack) {

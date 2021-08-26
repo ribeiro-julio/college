@@ -51,7 +51,7 @@ int tableSize(HashArray *table) {
 
 bool insert(HashArray *table, HashItem *item) {
     if(isFull(table)) {
-        printf("Insertion Error -> Table is full\n");
+        printf("Insertion error -> Table is full\n");
         return false;
     }
 
@@ -59,7 +59,7 @@ bool insert(HashArray *table, HashItem *item) {
 
     while(true) {
         if(pos >= MAX_SIZE) {
-            printf("Insertion Error -> No space left in the table\n");
+            printf("Insertion error -> No space left in the table\n");
             return false;
         }
 
@@ -75,14 +75,14 @@ bool insert(HashArray *table, HashItem *item) {
 
 bool removeItem(HashArray *table, int x) {      // TODO
     if(isEmpty(table)) {
-        printf("Removal Error -> Table is empty\n");
+        printf("Removal error -> Table is empty\n");
         return false;
     }
 
     int pos = hashFunction(x);
 
     if(table->array[pos] == NULL) {
-        printf("Removal Error -> Key not found\n");
+        printf("Removal error -> Key not found\n");
         return false;
     }
 
@@ -93,14 +93,14 @@ bool removeItem(HashArray *table, int x) {      // TODO
 
 bool search(HashArray *table, int x) {      // TODO
     if(isEmpty(table)) {
-        printf("Search Error -> Table is empty\n");
+        printf("Search error -> Table is empty\n");
         return false;
     }
 
     int pos = hashFunction(x);
 
     if(table->array[pos] == NULL) {
-        printf("Search Warning -> Key not found\n");
+        printf("Search warning -> Key not found\n");
         return false;
     }
     
@@ -115,7 +115,7 @@ void printTable(HashArray *table) {
         if(table->array[i] != NULL)
             printf("  [%d](%d, %s)\n", i, table->array[i]->x, table->array[i]->info);
         else
-            printf("  [%d](EMPTY)\n", i);
+            printf("  [%d](Empty)\n", i);
     }
     printf("-------------------------------------------\n");
 }

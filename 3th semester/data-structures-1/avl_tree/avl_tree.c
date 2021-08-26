@@ -49,8 +49,10 @@ void postOrder(AVLNodePtr *node) {
 }
 
 bool search(AVLNodePtr *node, int x) {
-    if((*node) == NULL)
+    if((*node) == NULL) {
+        printf("Search warning -> Key not found\n");
         return false;
+    }
     
     if((*node)->x == x)
         return true;
@@ -190,7 +192,7 @@ bool insert(AVLNodePtr *node, int x) {
     }
 
     if((*node)->x == x) {
-        printf("Erro ao inserir -> chave ja existente\n");
+        printf("Insertion error -> Key already exists\n");
         return false;
     }
 
@@ -207,7 +209,7 @@ bool insert(AVLNodePtr *node, int x) {
     int lh = AVLHeight((*node)->left);
 
     if((rh - lh) == 2 || (rh - lh) == -2) {
-        printf("Tree is unbalanced\n");
+        printf("Insertion warning -> Tree is unbalanced\n");
         applyRotations(&(*node));
     }
 
@@ -257,7 +259,7 @@ int AVLDepth(AVLNodePtr *node) {    // Nó para raiz
 
 bool removeNode(AVLNodePtr *node, int x) {
     if((*node) == NULL) {       // Nao encontrou
-        printf("Erro ao remover -> chave nao encontrada\n");
+        printf("Removal error -> Key not found\n");
         return false;
     }
 
@@ -295,8 +297,10 @@ bool removeNode(AVLNodePtr *node, int x) {
     int rd = AVLDepth(&(*node)->right);
     int ld = AVLDepth(&(*node)->left);
 
-    if((ld - rd) == 2 || (ld - rd) == -2)   // Se desbalanceou a arvore faz rebalanceamento
+    if((ld - rd) == 2 || (ld - rd) == -2) {     // Se desbalanceou a arvore faz rebalanceamento
+        printf("Removal warning -> Tree is unbalanced\n");
         applyRotations(&(*node));
+    }
 
     (*node)->height = updateAVLHeight((*node)->left, (*node)->right);
 
