@@ -1,0 +1,22 @@
+Tipos necessários:
+  - Struct de carta (contendo valor e naipe);
+  - Vetor de cartas (contendo 52 cartas);
+  - Structs para a implementação das pilhas;
+
+4 pilhas definitivas:
+  - Pilhas estáticas com capacidade de 13 cartas cada.
+  - Função init (para iniciar a pilhas sem elementos);
+	   push (com a regra de ser do mesmo naipe e em ordem crescente (carta a adicionar deve ter valor maior que a do topo));
+           top (para saber qual a última carta da pilha).
+
+8 pilhas intermediárias:
+  - Pilhas dinâmicas (diminuir a quantidade de memória necessária, pois não temos como ter certeza a quantidade máxima de cada pilha).
+  - Função init (iniciar a pilha);
+	   push (sem a adição de regras, para que o baralho possa ser distribuido de maneira aleatórias nas pilhas);
+	   pop;
+	   destroy (para desalocar a memória no final da execução do programa).
+
+Funções adicionais:
+  - Funcção para embaralhar o baralho;
+  - Função para adicionar cartas nas pilhas intermediárias (uma em cada pilha até que acaba as cartas);
+  - Função para verificar se a movimentação de uma pilha intermediária para outra é válida (cor diferente e valor menor da carta do topo da pilha destino);
