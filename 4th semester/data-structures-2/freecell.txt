@@ -12,11 +12,12 @@ Tipos necessários:
 8 pilhas intermediárias:
   - Pilhas dinâmicas (diminuir a quantidade de memória necessária, pois não temos como ter certeza a quantidade máxima de cada pilha).
   - Função init (iniciar a pilha);
-	   push (sem a adição de regras, para que o baralho possa ser distribuido de maneira aleatórias nas pilhas);
+	   push (sem a adição de regras, para que o baralho possa ser distribuido de maneira aleatórias nas pilhas no começo do jogo);
 	   pop;
 	   destroy (para desalocar a memória no final da execução do programa).
 
 Funções adicionais:
-  - Funcção para embaralhar o baralho;
-  - Função para adicionar cartas nas pilhas intermediárias (uma em cada pilha até que acaba as cartas);
+  - Função para embaralhar o baralho;
+  - Função para adicionar cartas nas pilhas intermediárias no início do jogo (uma em cada pilha até que acaba as cartas);
   - Função para verificar se a movimentação de uma pilha intermediária para outra é válida (cor diferente e valor menor da carta do topo da pilha destino);
+  - Função para printar as pilhas definitivas e intermediárias;
