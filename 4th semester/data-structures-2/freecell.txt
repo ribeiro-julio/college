@@ -16,7 +16,7 @@ Tipos necessários:
 	   pop;
 	   destroy (para desalocar a memória no final da execução do programa).
 
-Funções adicionais:
+Funções adicionais:		
   - Função para embaralhar o baralho;
   - Função para adicionar cartas nas pilhas intermediárias no início do jogo (uma em cada pilha até que acaba as cartas);
   - Função para verificar se a movimentação de uma pilha intermediária para outra é válida (cor diferente e valor menor da carta do topo da pilha destino);
