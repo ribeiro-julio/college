@@ -1,31 +1,148 @@
-% Matrizes retiradas de: Filtros Lineares - Alexandre Xavier Falcao
-
-%canny = ;
-%sobel = ;
-
 % Abre a imagem
-img_data = imread("lenna.png");
+img_data = imread("ambience.jpeg");
 
 % Deixa a imagem cinza
 img_gray = double(rgb2gray(img_data));
 
-% Compara a imagem colorida sem filtro e com filtro
+
+% Figura colorida com filtro gaussian blur e media
 figure;
-subplot(1,2,1);
+
+subplot(1,3,1);
 imshow(img_data);
-[r_gaussian, g_gaussian, b_gaussian] = color_mean(img_data);
-color_gaussian = cat(3, uint8(r_gaussian), uint8(g_gaussian), uint8(b_gaussian));
-subplot(1,2,2);
-imshow(color_gaussian);
+title("Imagem original");
 
-% Compara a imagem cinza sem filtro e com filtro
+[r_gaussian, g_gaussian, b_gaussian] = color_gaussian_blur(img_data);
+filtered_gaussian = cat(3, uint8(r_gaussian), uint8(g_gaussian), uint8(b_gaussian));
+subplot(1,3,2);
+imshow(filtered_gaussian);
+title("Imagem + Gaussian Blur");
+
+[r_mean, g_mean, b_mean] = color_mean(img_data);
+filtered_mean = cat(3, uint8(r_mean), uint8(g_mean), uint8(b_mean));
+subplot(1,3,3);
+imshow(filtered_mean);
+title("Imagem + Média");
+
+
+% Figura cinza com filtro gaussian blur e media
 figure;
-subplot(1,2,1);
-imshow(uint8(img_gray));
-gray_gaussian = gray_mean(img_gray);
-subplot(1,2,2);
-imshow(uint8(gray_gaussian));
 
+subplot(1,3,1);
+imshow(uint8(img_gray));
+title("Imagem original cinza");
+
+filtered_gaussian = gray_gaussian_blur(img_gray);
+subplot(1,3,2);
+imshow(uint8(filtered_gaussian));
+title("Imagem cinza + Gaussian Blur");
+
+filtered_mean = gray_mean(img_gray);
+subplot(1,3,3);
+imshow(uint8(filtered_mean));
+title("Imagem cinza + Média");
+
+
+% Figura colorida com ruido e filtro gaussian blur e media
+noisy_image = imnoise(img_data, 'gaussian');
+
+figure;
+
+subplot(1,3,1);
+imshow(noisy_image);
+title("Imagem + ruído gaussiano");
+
+[r_gaussian, g_gaussian, b_gaussian] = color_gaussian_blur(noisy_image);
+filtered_gaussian = cat(3, uint8(r_gaussian), uint8(g_gaussian), uint8(b_gaussian));
+subplot(1,3,2);
+imshow(filtered_gaussian);
+title("Imagem + ruído + Gaussian Blur");
+
+[r_mean, g_mean, b_mean] = color_mean(noisy_image);
+filtered_mean = cat(3, uint8(r_mean), uint8(g_mean), uint8(b_mean));
+subplot(1,3,3);
+imshow(filtered_mean);
+title("Imagem + ruído + Média");
+
+
+% Figura sem ruido com filtros Sobel
+figure;
+
+subplot(1,3,1);
+imshow(img_data);
+title("Imagem original");
+
+filtered_sobel_x = sobel_x(img_gray);
+subplot(1,3,2);
+imshow(uint8(filtered_sobel_x));
+title("Imagem + Sobel X");
+
+filtered_sobel_y = sobel_y(img_gray);
+subplot(1,3,3);
+imshow(uint8(filtered_sobel_y));
+title("Imagem + Sobel Y");
+
+
+% Figura sem ruido com filtros Canny e Outline
+figure;
+
+subplot(1,3,1);
+imshow(img_data);
+title("Imagem original");
+
+filtered_outline = outline(img_gray);
+subplot(1,3,2);
+imshow(uint8(filtered_outline));
+title("Imagem + Outline");
+
+filtered_canny = canny(img_gray);
+subplot(1,3,3);
+imshow(filtered_canny);
+title("Imagem + Canny");
+
+
+% Figura com ruido e filtros de outline/canny
+noisy_img_gray = double(rgb2gray(noisy_image));
+
+figure;
+
+subplot(1,3,1);
+imshow(noisy_image);
+title("Imagem + ruído gaussiano");
+
+filtered_outline = outline(noisy_img_gray);
+subplot(1,3,2);
+imshow(uint8(filtered_outline));
+title("Imagem + ruído + Outline");
+
+filtered_canny = canny(noisy_img_gray);
+subplot(1,3,3);
+imshow(filtered_canny);
+title("Imagem + ruído + Canny");
+
+
+% Figura com ruido + gaussian + bordas
+noisy_img_gray = double(rgb2gray(noisy_image));
+filtered_noisy_img_gray = gray_gaussian_blur(noisy_img_gray);
+
+figure;
+
+subplot(1,3,1);
+imshow(noisy_image);
+title("Imagem + ruído gaussiano");
+
+filtered_outline = outline(filtered_noisy_img_gray);
+subplot(1,3,2);
+imshow(uint8(filtered_outline));
+title("Imagem + ruído + Gaussian Blur + Outline");
+
+filtered_canny = canny(filtered_noisy_img_gray);
+subplot(1,3,3);
+imshow(filtered_canny);
+title("Imagem + ruído + Gaussian Blur + Canny");
+
+
+% ------------------------------------------ % FUNCOES % ------------------------------------------ %
 
 function [filtered_r_channel, filtered_g_channel, filtered_b_channel] = color_gaussian_blur(img_data)
     % Separa os 3 canais (red, green, blue) pra nao perder a coloracao da figura
@@ -33,68 +150,22 @@ function [filtered_r_channel, filtered_g_channel, filtered_b_channel] = color_ga
     g_channel = double(img_data(:, :, 2));
     b_channel = double(img_data(:, :, 3));
 
-    % Pega as dimensoes do vetor da imagem
-    dimensions = size(img_data);
-    img_rows = dimensions(1);
-    img_pixels = dimensions(2);
-
     % Define o kernel
     kernel = 1/16.*[1 2 1; 2 4 2; 1 2 1];
 
-    % Define o centro da matriz do kernel
-    kernel_center_x = 2;
-    kernel_center_y = 2;
-    
-    for i_i = 1:img_rows
-        for i_j = 1:img_pixels
-            for k_i = 1:3
-                for k_j = 1:3
-                    i = i_i+(k_i-kernel_center_x);
-                    j = i_j+(k_j-kernel_center_y);
-                    if(i >= 1 && i <= img_rows && j >= 1 && j <= img_pixels)
-                        r_channel(i_i, i_j) = r_channel(i_i, i_j) + r_channel(i, j)*kernel(k_i, k_j);
-                        g_channel(i_i, i_j) = g_channel(i_i, i_j) + g_channel(i, j)*kernel(k_i, k_j);
-                        b_channel(i_i, i_j) = b_channel(i_i, i_j) + b_channel(i, j)*kernel(k_i, k_j);
-                    end
-                end
-            end
-        end
-    end
-
-    filtered_r_channel = r_channel;
-    filtered_g_channel = g_channel;
-    filtered_b_channel = b_channel;
+    % Faz a convoluca em cada canal
+    filtered_r_channel = conv2(r_channel, kernel);
+    filtered_g_channel = conv2(g_channel, kernel);
+    filtered_b_channel = conv2(b_channel, kernel);
 end
 
 
 function filtered_img = gray_gaussian_blur(img_gray)
-    % Pega as dimensoes do vetor da imagem
-    dimensions = size(img_gray);
-    img_rows = dimensions(1);
-    img_pixels = dimensions(2);
-
     % Define o kernel
     kernel = 1/16.*[1 2 1; 2 4 2; 1 2 1];
 
-    % Define o centro da matriz do kernel
-    kernel_center_x = 2;
-    kernel_center_y = 2;
-
-    for i_i = 1:img_rows
-        for i_j = 1:img_pixels
-            for k_i = 1:3
-                for k_j = 1:3
-                    i = i_i+(k_i-kernel_center_x);
-                    j = i_j+(k_j-kernel_center_y);
-                    if(i >= 1 && i <= img_rows && j >= 1 && j <= img_pixels)
-                        img_gray(i_i, i_j) = img_gray(i_i, i_j) + img_gray(i, j)*kernel(k_i, k_j);
-                    end
-                end
-            end
-        end
-    end
-
-    filtered_img = img_gray;
+    % Faz a convolucao
+    filtered_img = conv2(img_gray, kernel);
 end
 
 
@@ -104,66 +175,52 @@ function [filtered_r_channel, filtered_g_channel, filtered_b_channel] = color_me
     g_channel = double(img_data(:, :, 2));
     b_channel = double(img_data(:, :, 3));
 
-    % Pega as dimensoes do vetor da imagem
-    dimensions = size(img_data);
-    img_rows = dimensions(1);
-    img_pixels = dimensions(2);
-
     % Define o kernel
     kernel = [1/9 1/9 1/9; 1/9 1/9 1/9; 1/9 1/9 1/9];
 
-    % Define o centro da matriz do kernel
-    kernel_center_x = 2;
-    kernel_center_y = 2;
-    
-    for i_i = 1:img_rows
-        for i_j = 1:img_pixels
-            for k_i = 1:3
-                for k_j = 1:3
-                    i = i_i+(k_i-kernel_center_x);
-                    j = i_j+(k_j-kernel_center_y);
-                    if(i >= 1 && i <= img_rows && j >= 1 && j <= img_pixels)
-                        r_channel(i_i, i_j) = r_channel(i_i, i_j) + r_channel(i, j)*kernel(k_i, k_j);
-                        g_channel(i_i, i_j) = g_channel(i_i, i_j) + g_channel(i, j)*kernel(k_i, k_j);
-                        b_channel(i_i, i_j) = b_channel(i_i, i_j) + b_channel(i, j)*kernel(k_i, k_j);
-                    end
-                end
-            end
-        end
-    end
-
-    filtered_r_channel = r_channel;
-    filtered_g_channel = g_channel;
-    filtered_b_channel = b_channel;
+    % Faz a convoluca em cada canal
+    filtered_r_channel = conv2(r_channel, kernel);
+    filtered_g_channel = conv2(g_channel, kernel);
+    filtered_b_channel = conv2(b_channel, kernel);
 end
 
 
 function filtered_img = gray_mean(img_gray)
-    % Pega as dimensoes do vetor da imagem
-    dimensions = size(img_gray);
-    img_rows = dimensions(1);
-    img_pixels = dimensions(2);
-
     % Define o kernel
     kernel = [1/9 1/9 1/9; 1/9 1/9 1/9; 1/9 1/9 1/9];
 
-    % Define o centro da matriz do kernel
-    kernel_center_x = 2;
-    kernel_center_y = 2;
+    % Faz a convolucao
+    filtered_img = conv2(img_gray, kernel);
+end
 
-    for i_i = 1:img_rows
-        for i_j = 1:img_pixels
-            for k_i = 1:3
-                for k_j = 1:3
-                    i = i_i+(k_i-kernel_center_x);
-                    j = i_j+(k_j-kernel_center_y);
-                    if(i >= 1 && i <= img_rows && j >= 1 && j <= img_pixels)
-                        img_gray(i_i, i_j) = img_gray(i_i, i_j) + img_gray(i, j)*kernel(k_i, k_j);
-                    end
-                end
-            end
-        end
-    end
 
-    filtered_img = img_gray;
+function filtered_img = sobel_x(img_gray)
+    % Define o kernel
+    kernel = [-1 0 1; -2 0 2; -1 0 1];
+
+    % Faz a convolucao
+    filtered_img = conv2(img_gray, kernel);
+end
+
+
+function filtered_img = sobel_y(img_gray)
+    % Define o kernel
+    kernel = [-1 -2 -1; 0 0 0; 1 2 1];
+
+    % Faz a convolucao
+    filtered_img = conv2(img_gray, kernel);
+end
+
+
+function filtered_img = outline(img_gray)
+    % Define o kernel
+    kernel = [-1 -1 -1; -1 8 -1; -1 -1 -1];
+
+    % Faz a convolucao
+    filtered_img = conv2(img_gray, kernel);
+end
+
+
+function filtered_img = canny(img_gray)
+    filtered_img = edge(img_gray, 'canny');
 end
