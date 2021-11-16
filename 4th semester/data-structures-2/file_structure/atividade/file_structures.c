@@ -26,12 +26,51 @@ void write_registry_fixed_size(FILE *file, Professor professors[], int n) {
         else if(professors[i].code < 100)
             fprintf(file, "0");
 
-        // Escreve os campos
-        fprintf(file, "%d|%s|%c|%d|%s|%s|", professors[i].code, 
-            professors[i].name, professors[i].sex, professors[i].age, 
-            professors[i].specialty, professors[i].phone_number);
+        fprintf(file, "%d|%s", professors[i].code, professors[i].name);
 
-        // Tamanho fixo de uma linha pra cada registro
+        // Calcula a quantidade de espaços depois do nome (comprimento fixo)
+        int spaces = 30 - strlen(professors[i].name);
+        // Letra com acento ocupa 2 valores, faz isso pra arrumar a quantidade
+        //    de espaços necessárias
+        // Se tiver 2 ocorrencias de códigos negativos tira um espaço (uma letra)
+        //    sendo gerada por 2 codigos
+        int count = 0;
+        for(int j = 0 ; professors[i].name[j] != '\0'; j++) {
+            if(professors[i].name[j] < 0)
+                count++;
+            if(count == 2){
+                spaces++;
+                count = 0;
+            }
+        }
+        for(int j = 0; j < spaces; j++)
+            fputc(' ', file);
+
+        fprintf(file, "|%c|", professors[i].sex);
+
+        // Para escrever a idade 2 digitos
+        if(professors[i].age < 10)
+            fprintf(file, "0");
+
+        fprintf(file, "%d|%s", professors[i].age, professors[i].specialty);
+
+        // Calcula a quantidade de espaços depois da especialidade
+        spaces = 30 - strlen(professors[i].specialty);
+        // Mesma coisa de tirar os espaços a mais com a especialidade...
+        count = 0;
+        for(int j = 0 ; professors[i].specialty[j] != '\0'; j++) {
+            if(professors[i].specialty[j] < 0)
+                count++;
+            if(count == 2){
+                spaces++;
+                count = 0;
+            }
+        }
+        for(int j = 0; j < spaces; j++)
+            fputc(' ', file);
+
+        fprintf(file, "|%s|", professors[i].phone_number);
+
         if(i != n-1)
             fprintf(file, "\n");
     }
@@ -48,8 +87,26 @@ void read_registry_fixed_size(FILE *file, FILE *data) {
     int i = 0;
     while(fscanf(data, "%d|%[^|]|%c|%d|%[^|]|%[^|]|\n", &professors[i].code, 
             professors[i].name, &professors[i].sex, &professors[i].age, 
-            professors[i].specialty, professors[i].phone_number) == 6)
+            professors[i].specialty, professors[i].phone_number) == 6) {
+                
+        // Formata o nome (tira os espaços do tamanho fixo)
+        for(int j = 29; j >= 0; j--) {
+            if(professors[i].name[j] != ' ') {
+                professors[i].name[j+1] = '\0';
+                break;
+            }
+
+        }
+        //Formata a especialidade
+        for(int j = 29; j >= 0; j--) {
+            if(professors[i].specialty[j] != ' ') {
+                professors[i].specialty[j+1] = '\0';
+                break;
+            }
+        }
         i++;
+    }
+        
     
     // Escreve os dados no outro arquivo
     int n = i;
@@ -62,9 +119,16 @@ void read_registry_fixed_size(FILE *file, FILE *data) {
             fprintf(file, "0");
 
         // Escreve os campos
-        fprintf(file, "%d,%s,%c,%d,%s,%s}\n", professors[i].code, 
-            professors[i].name, professors[i].sex, professors[i].age, 
-            professors[i].specialty, professors[i].phone_number);
+        fprintf(file, "%d,%s,%c,", professors[i].code, 
+            professors[i].name, professors[i].sex);
+
+        // Para escrever a idade 2 digitos
+        if(professors[i].age < 10)
+            fprintf(file, "0");
+
+        // Escreve os campos
+        fprintf(file, "%d,%s,%s}\n", professors[i].age, professors[i].specialty, 
+            professors[i].phone_number);
     }
 }
 
@@ -72,32 +136,10 @@ void read_registry_fixed_size(FILE *file, FILE *data) {
 
 void write_registry_size_indicator(FILE *file, Professor professors[], int n) {
     for(int i = 0; i < n; i++) {
-        // Calcula o tamanho da idade (quantidade de caracteres)
-        int age_size;
-        if(professors[i].age > 99) age_size = 3;
-        if(professors[i].age > 10 && professors[i].age < 100) age_size = 2;
-        if(professors[i].age < 10) age_size = 1;
-
-        // Calcula o tamanho do nome (caracteres que não sao \0)
-        int name_size = 0;
-        int j = 0;
-        while(professors[i].name[j] != '\0') {
-            name_size++;
-            j++;
-        }
-
-        // Calcula o tamanho da especialidade (caracteres que não sao \0)
-        int specialty_size = 0;
-        j = 0;
-        while(professors[i].specialty[j] != '\0') {
-            specialty_size++;
-            j++;
-        }
-
-        // Cacula o tamanho do registro (codigo = 3, sexo = 1, telefone = 14 
-        //   e 6 delimitadores)
-        int register_size = 3 + name_size + 1 + age_size + specialty_size + 
-            14 + 6;
+        // Cacula o tamanho do registro (codigo = 3, sexo = 1, idade = 2;
+        //   telefone = 14 + 6 delimitadores)
+        int register_size = 3 + strlen(professors[i].name) + 1 + 2 + 
+            strlen(professors[i].specialty) + 14 + 6;
 
         // Escreve tamanho do registro
         fprintf(file, "%d ", register_size);
@@ -109,9 +151,16 @@ void write_registry_size_indicator(FILE *file, Professor professors[], int n) {
             fprintf(file, "0");
 
         // Escreve os campos
-        fprintf(file, "%d|%s|%c|%d|%s|%s|", professors[i].code, 
-            professors[i].name, professors[i].sex, professors[i].age, 
-            professors[i].specialty, professors[i].phone_number);
+        fprintf(file, "%d|%s|%c|", professors[i].code, 
+            professors[i].name, professors[i].sex);
+
+        // Para escrever a idade 2 digitos
+        if(professors[i].age < 10)
+            fprintf(file, "0");
+
+        // Escreve os campos
+        fprintf(file, "%d|%s|%s|", professors[i].age, professors[i].specialty, 
+            professors[i].phone_number);
     }
 }
 
@@ -169,9 +218,15 @@ void write_registry_delimiter(FILE *file, Professor professors[], int n) {
             fprintf(file, "0");
 
         // Escreve os campos
-        fprintf(file, "%d|%s|%c|%d|%s|%s|", professors[i].code, 
-            professors[i].name, professors[i].sex, professors[i].age, 
-            professors[i].specialty, professors[i].phone_number);
+        fprintf(file, "%d|%s|%c|", professors[i].code, professors[i].name, 
+            professors[i].sex);
+
+        // Para escrever a idade 2 digitos
+        if(professors[i].age < 10)
+            fprintf(file, "0");
+
+        fprintf(file, "%d|%s|%s|", professors[i].age, professors[i].specialty, 
+            professors[i].phone_number);
 
         // Registros separados por um #
         if(i != n-1)
@@ -221,6 +276,10 @@ bool handle_input(FILE *file, Professor professors[], int *method, int *size) {
                 professors[i].name, &professors[i].sex, &professors[i].age, 
                 professors[i].specialty, professors[i].phone_number) != 6)
             return false;
+        
+        // Garante a idade em 2 digitos
+        if(professors[i].age >= 100)
+            professors[i].age = 99;
 
         c = fgetc(file);
         // Se for um \r ou \n le novamente
