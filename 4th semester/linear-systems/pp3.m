@@ -1,12 +1,15 @@
+clear all;
+clc;
+
 % Quantidade de componentes
-n = 20;
+n = 10;
 % Amplitude
 A = 5;
 % Periodo
 T = 2;
 % Duty cycle (%)
-Pw = 50;
-Pw = T - (T/100)*(Pw);
+Pw = 40;
+Pw = (Pw/100)*T;
 % Omega
 w = 2*pi/T;
 % Valores para t
@@ -23,7 +26,7 @@ for t = t_values
             value = value + A*Pw/T;
         % Caso controlario calcula com a expressao x[k]
         else
-            value = value + exp(j*k*w*t)*((-A*exp(j*k*w*Pw)/(T*j*k*w)) + ...
+            value = value + exp(j*k*w*t)*((-A*exp(-1*j*k*w*Pw)/(T*j*k*w)) + ...
                 A/(T*j*k*w));
         end
     end
