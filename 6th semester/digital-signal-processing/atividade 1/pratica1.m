@@ -15,7 +15,8 @@ T1 = 2*pi/W1;
 T2 = 2*pi/W2;
 T = lcm(T1, T2);    % MMC dos dois períodos
 
-% Fazendo vetor de amostras
+% Fazendo vetor de amostras (vai de zero até numero de ciclos*amostras de
+% um ciclo)
 n = 0:1/Fs:(T*cicles)-1;
 
 % Calculando valores da funcao para cada amostra
@@ -23,7 +24,6 @@ Xn = A1*cos(n*W1) + A2*sin(n*W2);
 
 % Plotando
 figure;
-colorstring = 'kbgry';
 stem(n, Xn);
 title(['X[n] com \omega_1 = ', num2str(W1/pi), '\pi, A_1 = ', num2str(A1), ...
     '; \omega_2 = ', num2str(W2/pi), '\pi, A_2 = ', num2str(A2)]);
